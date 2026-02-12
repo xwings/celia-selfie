@@ -25,13 +25,13 @@ Once installed, your agent responds to:
 
 ```
 "Send me a selfie"
-"给我发个自怕啊"
+"给我发个自拍啊"
 "Send a pic wearing a cowboy hat"
-"穿个帽子给我拍照啊"
+"穿个帽子给我个拍照啊"
 "What are you doing right now?"
 "在干嘛啊"
 "Show me you at a coffee shop"
-"让我看看你在喝咖啡吗"
+"在喝咖啡吗, 让我看看?"
 ```
 
 ## Reference Image 照片模型(可以自由替换)
