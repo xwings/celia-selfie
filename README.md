@@ -1,4 +1,4 @@
-# celia=selfie
+# celia-selfie
 
 ![alt text](img/image.png)
 
