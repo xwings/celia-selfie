@@ -1,0 +1,133 @@
+#!/bin/bash
+
+# --- Default Values ---
+MODE="auto"
+CAPTION="Edited with celia-skill"
+API_KEY=$CELIA_SELFIE_API
+USER_CONTEXT=""
+CHANNEL=""
+SERVICE="HUOSHANYUN"
+REFERENCE_IMAGE=""
+
+# --- Help Function ---
+usage() {
+  echo "Usage: $0 [options]"
+  echo
+  echo "Required Options:"
+  echo "  --api-key, -k <key>       API Key for authentication"
+  echo "  --context, -c <text>      User context string (e.g., 'wearing a cowboy hat')"
+  echo "  --channel, -t <channel>   Target channel ID or name"
+  echo "  --image, -i <url>         Reference image URL"
+  echo
+  echo "Optional Options:"
+  echo "  --mode, -m <mode>         'mirror', 'direct', or 'auto' (default: auto)"
+  echo "  --caption <text>          Caption for the message (default: 'Edited with celia-skill')"
+  echo "  --help, -h                Show this help message"
+  echo
+  exit 1
+}
+
+# --- Argument Parsing ---
+while [[ "$#" -gt 0 ]]; do
+  case $1 in
+    --api-key|-k) API_KEY="$2"; shift ;;
+    --context|-c) USER_CONTEXT="$2"; shift ;;
+    --channel|-t) CHANNEL="$2"; shift ;;
+    --image|-i) REFERENCE_IMAGE="$2"; shift ;;
+    --mode|-m) MODE="$2"; shift ;;
+    --service|-s) SERVICE="$2"; shift ;;
+    --caption) CAPTION="$2"; shift ;;
+    --help|-h) usage ;;
+    *) echo "Unknown parameter: $1"; usage ;;
+  esac
+  shift
+done
+
+function OPENCLAW_SEND_MSG {
+  local SEND_MSG=$1
+  local SEND_MEDIA=$2
+  if ! command -v "openclaw" &> /dev/null; then
+    node /app/openclaw.mjs message send \
+      -t "$CHANNEL" \
+      -m "$SEND_MSG" \
+      --media "$SEND_MEDIA"
+  else
+    openclaw message send \
+      -t "$CHANNEL" \
+      -m "$SEND_MSG" \
+      --media "$SEND_MEDIA"
+  fi  
+}
+
+# --- Validation ---
+if [ -z "$API_KEY" ]; then
+  echo "Error: --api-key is required."
+  OPENCLAW_SEND_MSG "api key not found : $API_KEY"
+  exit 1
+fi
+
+if [ -z "$USER_CONTEXT" ] || [ -z "$CHANNEL" ] || [ -z "$REFERENCE_IMAGE" ]; then
+  echo "Error: --context, --channel, and --image are required."
+  usage
+fi
+
+# --- Logic: Auto-detect Mode ---
+if [ "$MODE" == "auto" ]; then
+  if echo "$USER_CONTEXT" | grep -qiE "outfit|wearing|clothes|dress|suit|fashion|full-body|mirror"; then
+    MODE="mirror"
+  elif echo "$USER_CONTEXT" | grep -qiE "cafe|restaurant|beach|park|city|close-up|portrait|face|eyes|smile"; then
+    MODE="direct"
+  else
+    MODE="mirror"  # default fallback
+  fi
+  echo "Auto-detected mode: $MODE"
+fi
+
+# --- Logic: Construct Prompt ---
+if [ "$MODE" == "direct" ]; then
+  EDIT_PROMPT="make a pic of this person. A 3/4 body selfie taken by herself at $USER_CONTEXT, direct eye contact with the camera, looking straight into the lens, eyes centered and clearly visible, not a mirror selfie. Shooting from arm's length, angle from 5cm top over eye level. face fully visible. Vertical photo. Phone front camera photo **WITHOUT** Depth of field."
+else
+  EDIT_PROMPT="make a pic of this person, a full body photo but $USER_CONTEXT. the person is taking a mirror selfie. Vertical photo. Normal phone camera selfie photo. Phone camera photo quality **WITHOUT** Depth of field."
+fi
+
+printf "\nMode: %s\n" "$MODE"
+printf "Editing reference image with prompt: $EDIT_PROMPT"
+
+# --- Logic: API Request ---
+# Using a heredoc for cleaner JSON formatting
+EDIT_PROMPT_ESCAPED=$(echo "$EDIT_PROMPT" | sed 's/"/\\\\"/g')
+
+if [ "$SERVICE" == "FAL" ]; then
+  JSON_PAYLOAD="{\"image_urls\": [\"$REFERENCE_IMAGE\"], \"prompt\": \"$EDIT_PROMPT_ESCAPED\", \"image_size\": {\"width\": 1080, \"height\": 1920}, \"num_images\": 1, \"output_format\": \"png\"}"
+  # Call API
+  RESPONSE=$(curl -s -X POST "https://fal.run/fal-ai/bytedance/seedream/v4.5/edit" \
+    -H "Authorization: Key $API_KEY" \
+    -H "Content-Type: application/json" \
+    -d "$JSON_PAYLOAD")
+elif [ "$SERVICE" == "HUOSHANYUN" ]; then
+  JSON_PAYLOAD="{\"model\": \"doubao-seedream-4-5-251128\", \"image\": \"$REFERENCE_IMAGE\", \"prompt\": \"$EDIT_PROMPT_ESCAPED\", \"sequential_image_generation\": \"disabled\", \"response_format\": \"url\", \"size\": \"1440x2560\", \"stream\": false, \"watermark\": true}"
+  # Call API
+  RESPONSE=$(curl -s -X POST "https://ark.cn-beijing.volces.com/api/v3/images/generations" \
+    -H "Authorization: Bearer $API_KEY" \
+    -H "Content-Type: application/json" \
+    -d "$JSON_PAYLOAD")
+fi
+
+printf "\nJSON Payload sent. Response: %s\n" "$RESPONSE"
+
+# --- Logic: Extract URL ---
+IMAGE_URL=$(echo "$RESPONSE" | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
+
+printf "\nIMAGE_URL: %s\n" "$IMAGE_URL"
+
+# --- Error Handling ---
+if [ "$IMAGE_URL" == "null" ] || [ -z "$IMAGE_URL" ]; then
+  echo "Error: Failed to edit image or parse response."
+  echo "Raw Response: $RESPONSE"
+  OPENCLAW_SEND_MSG "Error generating image. Raw response: $RESPONSE"
+  exit 1
+fi
+
+OPENCLAW_SEND_MSG "" "$IMAGE_URL"
+
+echo "Done!"
