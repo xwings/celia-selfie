@@ -13,10 +13,10 @@ A better looking version from [clawra](https://github.com/SumeLabs/clawra/)
 ```bash
 git https://github.com/xwings/celia-selfie.git
 cp -aRp celia-selfie /path/to/openclaw/workspace/skills
-cd celia-selfie /path/to/openclaw/workspace/skills/celia-selfie
+cd /path/to/openclaw/workspace/skills/celia-selfie
 cat replace-IDENTITY.md > ../../../IDENTITY.md
 cat inject-SOUL.md >> ../../../SOUL.md
-echo "CELIA_SELFIE_API=XXXXXX_API_XXXXX"
+echo "CELIA_SELFIE_API=XXXXXX_API_XXXXX" >> ../../../.env
 ```
 
 ## Usage Examples 如何激活
