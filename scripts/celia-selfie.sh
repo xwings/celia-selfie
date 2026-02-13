@@ -6,6 +6,7 @@ CAPTION="Edited with celia-skill"
 API_KEY=$CELIA_SELFIE_API
 USER_CONTEXT=""
 CHANNEL=""
+TARGET=""
 SERVICE="HUOSHANYUN"
 REFERENCE_IMAGE=""
 
@@ -15,13 +16,15 @@ usage() {
   echo
   echo "Required Options:"
   echo "  --api-key, -k <key>       API Key for authentication"
-  echo "  --context, -c <text>      User context string (e.g., 'wearing a cowboy hat')"
-  echo "  --channel, -t <channel>   Target channel ID or name"
+  echo "  --prompt, -p <text>      User context string (e.g., 'wearing a cowboy hat')"
+  echo "  --channel, -c <channel>   Target channel type"
+  echo "  --target, -t <targetid>   Target name ID"
   echo "  --image, -i <url>         Reference image URL"
   echo
   echo "Optional Options:"
   echo "  --mode, -m <mode>         'mirror', 'direct', or 'auto' (default: auto)"
   echo "  --caption <text>          Caption for the message (default: 'Edited with celia-skill')"
+  echo "  --service, -s <MODEL>     AI service provider (default: 'FAL')"
   echo "  --help, -h                Show this help message"
   echo
   exit 1
@@ -31,8 +34,9 @@ usage() {
 while [[ "$#" -gt 0 ]]; do
   case $1 in
     --api-key|-k) API_KEY="$2"; shift ;;
-    --context|-c) USER_CONTEXT="$2"; shift ;;
-    --channel|-t) CHANNEL="$2"; shift ;;
+    --prompt|-p) USER_CONTEXT="$2"; shift ;;
+    --channel|-c) CHANNEL="$2"; shift ;;
+    --target|-t) TARGET="$2"; shift ;;
     --image|-i) REFERENCE_IMAGE="$2"; shift ;;
     --mode|-m) MODE="$2"; shift ;;
     --service|-s) SERVICE="$2"; shift ;;
