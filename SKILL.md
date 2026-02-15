@@ -53,7 +53,6 @@ If neither is available, the script exits with an error message.
 
 Ask the user for:
 - **User context**: What should the person in the image be doing/wearing/where?
-- **Mode** (optional): `mirror` or `direct` selfie style
 - **Target channel(s)**: Where should it be sent? (e.g., `#general`, `@username`, channel ID)
 - **Platform** (optional): Which platform? (discord, telegram, whatsapp, slack)
 
