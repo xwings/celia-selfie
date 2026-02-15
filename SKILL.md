@@ -57,60 +57,63 @@ Ask the user for:
 - **Target channel(s)**: Where should it be sent? (e.g., `#general`, `@username`, channel ID)
 - **Platform** (optional): Which platform? (discord, telegram, whatsapp, slack)
 
-## Prompt Modes
+## Prompt Types
 
-### Mode 1: Mirror Selfie (default)
+### Type 1: Mirror Selfie
 Best for: outfit showcases, full-body shots, fashion content
 
 ```
-make a pic of this person, but [user's context]. the person is taking a mirror selfie
+make a pic of this person, a full body photo but [$USER_CONTEXT]. the person is taking a mirror selfie. Vertical photo. Normal phone camera selfie photo. Phone camera photo quality **WITHOUT** Depth of field."
 ```
 
-**Example**: "wearing a santa hat"
+**Example**:
 ```
-make a pic of this person, but wearing a santa hat. the person is taking a mirror selfie
+make a pic of this person, a full body photo but wearing a santa hat. the person is taking a mirror selfie. Vertical photo. Normal phone camera selfie photo. Phone camera photo quality **WITHOUT** Depth of field."
 ```
 
-### Mode 2: Direct Selfie
+### Type 2: Direct Selfie
 Best for: close-up portraits, location shots, emotional expressions
 
 ```
-a close-up selfie taken by herself at [user's context], direct eye contact with the camera, looking straight into the lens, eyes centered and clearly visible, not a mirror selfie, phone held at arm's length, face fully visible
+make a pic of this person. A 3/4 body selfie taken by herself at [$USER_CONTEXT], direct eye contact with the camera, looking straight into the lens, eyes centered and clearly visible, not a mirror selfie. Shooting from arm's length, angle from 5cm top over eye level. face fully visible. Vertical photo. Phone front camera photo **WITHOUT** Depth of field.
 ```
 
-**Example**: "a cozy cafe with warm lighting"
+**Example**: 
 ```
-a close-up selfie taken by herself at a cozy cafe with warm lighting, direct eye contact with the camera, looking straight into the lens, eyes centered and clearly visible, not a mirror selfie, phone held at arm's length, face fully visible
+make a pic of this person. A 3/4 body selfie taken by herself at cozy cafe with warm lighting, direct eye contact with the camera, looking straight into the lens, eyes centered and clearly visible, not a mirror selfie. Shooting from arm's length, angle from 5cm top over eye level. face fully visible. Vertical photo. Phone front camera photo **WITHOUT** Depth of field.
 ```
 
-### Mode Selection Logic
+### Type 3: Non Selfie
+Best for: Normal photo, not selfie
 
-| Keywords in Request | Auto-Select Mode |
-|---------------------|------------------|
-| outfit, wearing, clothes, dress, suit, fashion | `mirror` |
-| cafe, restaurant, beach, park, city, location | `direct` |
-| close-up, portrait, face, eyes, smile | `direct` |
-| full-body, mirror, reflection | `mirror` |
+```
+make a pic of this person. by herself at [$USER_CONTEXT], looking straight into the lens, eyes centered and clearly visible. Vertical photo. **WITHOUT** Depth of field.
+```
+
+**Example**: 
+```
+make a pic of this person. by herself at at living room on a couch, looking straight into the lens, eyes centered and clearly visible. Vertical photo. **WITHOUT** Depth of field.
+```
 
 ### Step 2: Execute thhe script
 
 This is how to run:
 
 ```bash
-bash {baseDir}/scripts/celia-selfie.sh --context "your prompt here" --channel "chat id" --mode "Prompt modes" --api-key "CELIA_SELFIE_API" --image "Reference Image URL here"
+bash {baseDir}/scripts/celia-selfie.sh --context "your prompt here" --channel "chat channel" --target "chat id" --api-key "CELIA_SELFIE_API" --image "Reference Image URL here"
 ```
 
 **Example**
 ```bash
-bash {baseDir}/scripts/celia-selfie.sh --context "in a singapore shopping mall" --channel "TELEGRAM_CHAT_ID" --mode "mirror" --api-key "CELIA_SELFIE_API" --image "https://celia-skill.oss-cn-shenzhen.aliyuncs.com/clawra.png"
+bash {baseDir}/scripts/celia-selfie.sh --context "in a singapore shopping mall" --channel "telegram" --target "TELEGRAM_CHAT_ID" --api-key "CELIA_SELFIE_API" --image "https://celia-skill.oss-cn-shenzhen.aliyuncs.com/clawra.png"
 ```
 
 ## Supported Platforms
 
 OpenClaw supports sending to:
 
-| Platform | Channel Format | Example |
-|----------|----------------|---------|
+| Channel   | Channel Format | Example |
+|-----------|----------------|---------|
 | Discord | `#channel-name` or channel ID | `#general`, `123456789` |
 | Telegram | `@username` or chat ID | `@mychannel`, `-100123456` |
 | WhatsApp | Phone number (JID format) | `1234567890@s.whatsapp.net` |
@@ -128,14 +131,12 @@ OpenClaw supports sending to:
 | `output_format` | enum | "jpeg" | jpeg, png, webp |
 
 ## Error Handling
-
 - **HUOSHAN_API_KEY missing**: Ensure the API key is set in environment
 - **Image edit failed**: Check prompt content and API quota
 - **OpenClaw send failed**: Verify gateway is running and channel exists
 - **Rate limits**: Huoshanyun has rate limits; implement retry logic if needed
 
 ## Tips
-
 1. **Mirror mode context examples** (outfit focus):
    - "wearing a santa hat"
    - "in a business suit"
@@ -146,8 +147,6 @@ OpenClaw supports sending to:
    - "a cozy cafe with warm lighting"
    - "a sunny beach at sunset"
    - "a busy city street at night"
-   - "a peaceful park in autumn"
 
 3. **Mode selection**: Let auto-detect work, or explicitly specify for control
-4. **Batch sending**: Edit once, send to multiple channels
-5. **Scheduling**: Combine with OpenClaw scheduler for automated posts
+4. **Scheduling**: Combine with OpenClaw scheduler for automated posts

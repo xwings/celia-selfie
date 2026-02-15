@@ -22,7 +22,6 @@ usage() {
   echo "  --image, -i <url>         Reference image URL"
   echo
   echo "Optional Options:"
-  echo "  --mode, -m <mode>         'mirror', 'direct', or 'auto' (default: auto)"
   echo "  --caption <text>          Caption for the message (default: 'Edited with celia-skill')"
   echo "  --service, -s <MODEL>     AI service provider (default: 'FAL')"
   echo "  --help, -h                Show this help message"
@@ -38,7 +37,6 @@ while [[ "$#" -gt 0 ]]; do
     --channel|-c) CHANNEL="$2"; shift ;;
     --target|-t) TARGET="$2"; shift ;;
     --image|-i) REFERENCE_IMAGE="$2"; shift ;;
-    --mode|-m) MODE="$2"; shift ;;
     --service|-s) SERVICE="$2"; shift ;;
     --caption) CAPTION="$2"; shift ;;
     --help|-h) usage ;;
@@ -75,41 +73,21 @@ if [ -z "$USER_CONTEXT" ] || [ -z "$CHANNEL" ] || [ -z "$REFERENCE_IMAGE" ]; the
   usage
 fi
 
-# --- Logic: Auto-detect Mode ---
-if [ "$MODE" == "auto" ]; then
-  if echo "$USER_CONTEXT" | grep -qiE "outfit|wearing|clothes|dress|suit|fashion|full-body|mirror"; then
-    MODE="mirror"
-  elif echo "$USER_CONTEXT" | grep -qiE "cafe|restaurant|beach|park|city|close-up|portrait|face|eyes|smile"; then
-    MODE="direct"
-  else
-    MODE="mirror"  # default fallback
-  fi
-  echo "Auto-detected mode: $MODE"
-fi
-
-# --- Logic: Construct Prompt ---
-if [ "$MODE" == "direct" ]; then
-  EDIT_PROMPT="make a pic of this person. A 3/4 body selfie taken by herself at $USER_CONTEXT, direct eye contact with the camera, looking straight into the lens, eyes centered and clearly visible, not a mirror selfie. Shooting from arm's length, angle from 5cm top over eye level. face fully visible. Vertical photo. Phone front camera photo **WITHOUT** Depth of field."
-else
-  EDIT_PROMPT="make a pic of this person, a full body photo but $USER_CONTEXT. the person is taking a mirror selfie. Vertical photo. Normal phone camera selfie photo. Phone camera photo quality **WITHOUT** Depth of field."
-fi
-
-printf "\nMode: %s\n" "$MODE"
-printf "Editing reference image with prompt: $EDIT_PROMPT"
+printf "Editing reference image with prompt: $USER_CONTEXT"
 
 # --- Logic: API Request ---
 # Using a heredoc for cleaner JSON formatting
-EDIT_PROMPT_ESCAPED=$(echo "$EDIT_PROMPT" | sed 's/"/\\\\"/g')
+USER_CONTEXT_ESCAPED=$(echo "$USER_CONTEXT" | sed 's/"/\\\\"/g')
 
 if [ "$SERVICE" == "FAL" ]; then
-  JSON_PAYLOAD="{\"image_urls\": [\"$REFERENCE_IMAGE\"], \"prompt\": \"$EDIT_PROMPT_ESCAPED\", \"image_size\": {\"width\": 1080, \"height\": 1920}, \"num_images\": 1, \"output_format\": \"png\"}"
+  JSON_PAYLOAD="{\"image_urls\": [\"$REFERENCE_IMAGE\"], \"prompt\": \"$USER_CONTEXT_ESCAPED\", \"image_size\": {\"width\": 1080, \"height\": 1920}, \"num_images\": 1, \"output_format\": \"png\"}"
   # Call API
   RESPONSE=$(curl -s -X POST "https://fal.run/fal-ai/bytedance/seedream/v4.5/edit" \
     -H "Authorization: Key $API_KEY" \
     -H "Content-Type: application/json" \
     -d "$JSON_PAYLOAD")
 elif [ "$SERVICE" == "HUOSHANYUN" ]; then
-  JSON_PAYLOAD="{\"model\": \"doubao-seedream-4-5-251128\", \"image\": \"$REFERENCE_IMAGE\", \"prompt\": \"$EDIT_PROMPT_ESCAPED\", \"sequential_image_generation\": \"disabled\", \"response_format\": \"url\", \"size\": \"1440x2560\", \"stream\": false, \"watermark\": true}"
+  JSON_PAYLOAD="{\"model\": \"doubao-seedream-4-5-251128\", \"image\": \"$REFERENCE_IMAGE\", \"prompt\": \"$USER_CONTEXT_ESCAPED\", \"sequential_image_generation\": \"disabled\", \"response_format\": \"url\", \"size\": \"1440x2560\", \"stream\": false, \"watermark\": true}"
   # Call API
   RESPONSE=$(curl -s -X POST "https://ark.cn-beijing.volces.com/api/v3/images/generations" \
     -H "Authorization: Bearer $API_KEY" \
