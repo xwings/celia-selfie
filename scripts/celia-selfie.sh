@@ -49,12 +49,14 @@ function OPENCLAW_SEND_MSG {
   local SEND_MEDIA=$2
   if ! command -v "openclaw" &> /dev/null; then
     node /app/openclaw.mjs message send \
-      -t "$CHANNEL" \
+      --channel "$CHANNEL" \
+      --target "$TARGET" \
       -m "$SEND_MSG" \
       --media "$SEND_MEDIA"
   else
     openclaw message send \
-      -t "$CHANNEL" \
+      --channel "$CHANNEL" \
+      --target "$TARGET" \
       -m "$SEND_MSG" \
       --media "$SEND_MEDIA"
   fi  
