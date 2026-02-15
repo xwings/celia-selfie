@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # --- Default Values ---
-MODE="auto"
 CAPTION="Edited with celia-skill"
 API_KEY=$CELIA_SELFIE_API
 USER_CONTEXT=""
