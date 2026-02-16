@@ -101,12 +101,12 @@ make a pic of this person. by herself at at living room on a couch, looking stra
 This is how to run:
 
 ```bash
-bash {baseDir}/scripts/celia-selfie.sh --context "your prompt here" --channel "chat channel" --target "chat id" --api-key "CELIA_SELFIE_API" --image "Reference Image URL here"
+bash {baseDir}/scripts/celia-selfie.sh --prompt "your prompt here" --channel "chat channel" --target "chat id" --api-key "CELIA_SELFIE_API" --image "Reference Image URL here"
 ```
 
 **Example**
 ```bash
-bash {baseDir}/scripts/celia-selfie.sh --context "in a singapore shopping mall" --channel "telegram" --target "TELEGRAM_CHAT_ID" --api-key "CELIA_SELFIE_API" --image "https://celia-skill.oss-cn-shenzhen.aliyuncs.com/clawra.png"
+bash {baseDir}/scripts/celia-selfie.sh --prompt "in a singapore shopping mall" --channel "telegram" --target "TELEGRAM_CHAT_ID" --api-key "CELIA_SELFIE_API" --image "https://celia-skill.oss-cn-shenzhen.aliyuncs.com/clawra.png"
 ```
 
 ## Supported Platforms
