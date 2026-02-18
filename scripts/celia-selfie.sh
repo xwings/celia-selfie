@@ -69,8 +69,8 @@ if [ -z "$API_KEY" ]; then
   exit 1
 fi
 
-if [ -z "$USER_CONTEXT" ] || [ -z "$CHANNEL" ] || [ -z "$REFERENCE_IMAGE" ]; then
-  echo "Error: --context, --channel, and --image are required."
+if [ -z "$USER_CONTEXT" ] || [ -z "$CHANNEL" ] || [ -z "$CHANNEL" ] || [ -z "$REFERENCE_IMAGE" ]; then
+  echo "Error: --context, --channel, --target and --image are required."
   usage
 fi
 

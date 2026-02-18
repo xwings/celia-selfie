@@ -122,15 +122,6 @@ OpenClaw supports sending to:
 | Signal | Phone number | `+1234567890` |
 | MS Teams | Channel reference | (varies) |
 
-## Grok Imagine Edit Parameters
-
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `image_url` | string | required | URL of image to edit (fixed in this skill) |
-| `prompt` | string | required | Edit instruction |
-| `num_images` | 1-4 | 1 | Number of images to generate |
-| `output_format` | enum | "jpeg" | jpeg, png, webp |
-
 ## Error Handling
 - **HUOSHAN_API_KEY missing**: Ensure the API key is set in environment
 - **Image edit failed**: Check prompt content and API quota
