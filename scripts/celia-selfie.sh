@@ -107,7 +107,7 @@ printf "\nIMAGE_URL: %s\n" "$IMAGE_URL"
 if [ "$IMAGE_URL" == "null" ] || [ -z "$IMAGE_URL" ]; then
   echo "Error: Failed to edit image or parse response."
   echo "Raw Response: $RESPONSE"
-  OPENCLAW_SEND_MSG "Error generating image. Raw response: $RESPONSE"
+  OPENCLAW_SEND_MSG "Error generating image. Raw response: $RESPONSE" ""
   exit 1
 fi
 
