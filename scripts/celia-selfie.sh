@@ -65,7 +65,7 @@ function OPENCLAW_SEND_MSG {
 # --- Validation ---
 if [ -z "$API_KEY" ]; then
   echo "Error: --api-key is required."
-  OPENCLAW_SEND_MSG "api key not found : $API_KEY"
+  OPENCLAW_SEND_MSG "api key not found : $API_KEY" ""
   exit 1
 fi
 
