@@ -125,7 +125,7 @@ if [ "$IMAGE_URL" == "null" ] || [ -z "$IMAGE_URL" ]; then
   exit 1
 fi
 
-wget -O image.png $$IMAGE_URL
+wget -O image.png $IMAGE_URL
 OPENCLAW_SEND_MSG "" "image.png"
 rm image.png
 
