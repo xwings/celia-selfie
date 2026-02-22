@@ -3,6 +3,7 @@
 # --- Default Values ---
 CAPTION="Edited with celia-skill"
 API_KEY=$CELIA_SELFIE_API
+BACKUP_API_KEY=$GROK_API
 USER_CONTEXT=""
 CHANNEL=""
 TARGET=""
@@ -15,16 +16,17 @@ usage() {
   echo "Usage: $0 [options]"
   echo
   echo "Required Options:"
-  echo "  --api-key, -k <key>       API Key for authentication"
-  echo "  --prompt, -p <text>      User context string (e.g., 'wearing a cowboy hat')"
-  echo "  --channel, -c <channel>   Target channel type"
-  echo "  --target, -t <targetid>   Target name ID"
-  echo "  --image, -i <url>         Reference image URL"
+  echo "  --api-key, -k <key>         API Key for authentication"
+  echo "  --prompt, -p <text>         User context string (e.g., 'wearing a cowboy hat')"
+  echo "  --channel, -c <channel>     Target channel type"
+  echo "  --target, -t <targetid>     Target name ID"
+  echo "  --image, -i <url>           Reference image URL"
   echo
   echo "Optional Options:"
-  echo "  --caption <text>          Caption for the message (default: 'Edited with celia-skill')"
-  echo "  --service, -s <MODEL>     AI service provider (default: 'FAL')"
-  echo "  --help, -h                Show this help message"
+  echo "  --backup-api-key, -b <key>  API Key for authentication"
+  echo "  --caption <text>            Caption for the message (default: 'Edited with celia-skill')"
+  echo "  --service, -s <MODEL>       AI service provider (default: 'FAL')"
+  echo "  --help, -h                  Show this help message"
   echo
   exit 1
 }
@@ -33,6 +35,7 @@ usage() {
 while [[ "$#" -gt 0 ]]; do
   case $1 in
     --api-key|-k) API_KEY="$2"; shift ;;
+    --backup-api-key|-k) BACKUP_API_KEY="$2"; shift ;;    
     --prompt|-p) USER_CONTEXT="$2"; shift ;;
     --channel|-c) CHANNEL="$2"; shift ;;
     --target|-t) TARGET="$2"; shift ;;
@@ -102,10 +105,10 @@ IMAGE_URL=$(echo $RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{pri
 
 if [ "$IMAGE_URL" == "null" ] || [ -z "$IMAGE_URL" ] || [[ ! "$IMAGE_URL" =~ \.png$ ]]; then
   printf "\n\nSwitch model, Error with Raw Response: $RESPONSE"
-  JSON_PAYLOAD="{\"image_url\": [\"$REFERENCE_IMAGE\"], \"prompt\": \"$USER_CONTEXT_ESCAPED\", \"image_size\": {\"width\": 1080, \"height\": 1920}, \"num_images\": 1, \"output_format\": \"png\"}"
+  JSON_PAYLOAD="{\"model\": \"grok-imagine-image-pro\", \"prompt\": \"$USER_CONTEXT_ESCAPED\", \"image\": {\"url\": $REFERENCE_IMAGE\"\", \"type\": \"image_url\"} }"
   # Call API
-  RESPONSE=$(curl -s -X POST "curl -X POST https://fal.run/xai/grok-imagine-image-pro" \
-    -H "Authorization: Key $API_KEY" \
+  RESPONSE=$(curl -s -X POST "curl -X POST https://api.x.ai/v1/images/edits" \
+    -H "Authorization: Bearer $BACKUP_API_KEY" \
     -H "Content-Type: application/json" \
     -d "$JSON_PAYLOAD")
   IMAGE_URL=$(echo $RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')    
