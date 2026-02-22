@@ -108,6 +108,16 @@ bash {baseDir}/scripts/celia-selfie.sh --prompt "your prompt here" --channel "ch
 bash {baseDir}/scripts/celia-selfie.sh --prompt "in a singapore shopping mall" --channel "telegram" --target "TELEGRAM_CHAT_ID" --api-key "CELIA_SELFIE_API" --image "https://celia-skill.oss-cn-shenzhen.aliyuncs.com/clawra.png"
 ```
 
+If user mention generate video, this is how you run
+```bash
+bash {baseDir}/scripts/celia-selfie.sh --prompt "your prompt here" --channel "chat channel" --target "chat id" --api-key "CELIA_SELFIE_API" --video --image "Reference Image URL here"
+```
+
+**Example**
+```bash
+bash {baseDir}/scripts/celia-selfie.sh --prompt "in a singapore shopping mall" --channel "telegram" --target "TELEGRAM_CHAT_ID" --api-key "CELIA_SELFIE_API" --video --image "https://celia-skill.oss-cn-shenzhen.aliyuncs.com/clawra.png"
+```
+
 ## Supported Platforms
 
 OpenClaw supports sending to:

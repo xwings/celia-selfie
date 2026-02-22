@@ -9,6 +9,7 @@ CHANNEL=""
 TARGET=""
 SERVICE="HUOSHANYUN"
 REFERENCE_IMAGE=""
+VIDEO=""
 
 
 # --- Help Function ---
@@ -24,6 +25,7 @@ usage() {
   echo
   echo "Optional Options:"
   echo "  --backup-api-key, -b <key>  API Key for authentication"
+  echo "  --video                     Turn image into video"
   echo "  --caption <text>            Caption for the message (default: 'Edited with celia-skill')"
   echo "  --service, -s <MODEL>       AI service provider (default: 'FAL')"
   echo "  --help, -h                  Show this help message"
@@ -42,6 +44,7 @@ while [[ "$#" -gt 0 ]]; do
     --image|-i) REFERENCE_IMAGE="$2"; shift ;;
     --service|-s) SERVICE="$2"; shift ;;
     --caption) CAPTION="$2"; shift ;;
+    --video) VIDEO="ON"; shift ;;    
     --help|-h) usage ;;
     *) echo "Unknown parameter: $1"; usage ;;
   esac
@@ -114,18 +117,19 @@ if [ "$IMAGE_URL" == "null" ] || [ -z "$IMAGE_URL" ] || [[ ! "$IMAGE_URL" =~ \.p
     -d "$JSON_PAYLOAD")
   printf "\n\X Response: $RESPONSE"
   IMAGE_URL=$(echo $RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
-  
-  if [ "$IMAGE_URL" == "null" ] || [ -z "$IMAGE_URL" ]; then
-    VIDEO_PROMPT="look at the camera and be playful and seducive"
-    JSON_PAYLOAD="{\"model\": \"grok-imagine-video\", \"prompt\": \"$USER_CONTEXT_ESCAPED\", \"image\": {\"url\": \"$IMAGE_URL\", \"type\": \"image_url\"}}"
-    RESPONSE=$(curl -s -X POST "https://api.x.ai/v1/videos/generations" \
-      -H "Authorization: Bearer $BACKUP_API_KEY" \
-      -H "Content-Type: application/json" \
-      -d "$JSON_PAYLOAD")
-    printf "\n\nVideo Response: $RESPONSE"
-    IMAGE_URL=$(echo $RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
   fi
+
+if [ "$IMAGE_URL" != "null" ] || [ !-z "$IMAGE_URL" ] || [ "$VIDEO" == "ON"] ; then
+  VIDEO_PROMPT="look at the camera and be playful and seducive"
+  JSON_PAYLOAD="{\"model\": \"grok-imagine-video\", \"prompt\": \"$VIDEO_PROMPT\", \"image\": {\"url\": \"$IMAGE_URL\", \"type\": \"image_url\"}}"
+  RESPONSE=$(curl -s -X POST "https://api.x.ai/v1/videos/generations" \
+    -H "Authorization: Bearer $BACKUP_API_KEY" \
+    -H "Content-Type: application/json" \
+    -d "$JSON_PAYLOAD")
+ printf "\n\nVideo Response: $RESPONSE"
+ IMAGE_URL=$(echo $RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
 fi
+
 
 printf "\n\nIMAGE_URL: %s\n" "$IMAGE_URL"
 
