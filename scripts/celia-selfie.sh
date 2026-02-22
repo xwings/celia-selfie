@@ -128,22 +128,23 @@ if [ "$IMAGE_URL" != "null" ] || [ !-z "$IMAGE_URL" ] || [ "$VIDEO" == "ON"] ; t
     -d "$JSON_PAYLOAD")
   printf "\n\nVideo Response: $RESPONSE"
   VIDEO_ID=$(echo $RESPONSE | awk -F '"request_id":"' '{print $2}' |  awk -F '"}' '{print $1}')
+  printf "\n\nVIDEO_ID: $VIDEO_ID"
   while true; do
     # Make the API call and capture the response
-    VIDE_RESPONSE=$(curl -s -X GET "https://api.x.ai/v1/videos/$VIDEO_ID" \
+    VIDEO_RESPONSE=$(curl -s -X GET "https://api.x.ai/v1/videos/$VIDEO_ID" \
         -H "Authorization: Bearer $BACKUP_API_KEY")
 
     # Extract the status using jq
     # Adjust '.status' if the field is nested differently in the JSON
-    VIDEO_STATUS=$(echo "$VIDE_RESPONSE" | grep "url")
+    VIDEO_STATUS=$(echo "$VIDEO_RESPONSE" | grep "url")
 
     printf "\n\nCurrent Status: $VIDEO_STATUS"
 
-    if [ "$VIDEO_STATUS" != "null" ] || [ !-z "$VIDEO_STATUS" ]; then
+    if [ "$VIDEO_STATUS" != "" ]; then
       break
     fi
   done
-  VIDEO_URL=$(echo $VIDE_RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
+  VIDEO_URL=$(echo $VIDEO_RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
   printf "\n\nVIDEO_URL: $VIDEO_URL"
 fi
 
