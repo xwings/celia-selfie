@@ -129,7 +129,8 @@ if [ "$IMAGE_URL" != "null" ] || [ !-z "$IMAGE_URL" ] || [ "$VIDEO" == "ON"] ; t
   printf "\n\nVideo Response: $RESPONSE"
   VIDEO_ID=$(echo $RESPONSE | awk -F '"request_id":"' '{print $2}' |  awk -F '"}' '{print $1}')
   printf "\n\nVIDEO_ID: $VIDEO_ID"
-  while true; do
+  i=0
+  while [ $i -le 10 ]; do
     # Make the API call and capture the response
     VIDEO_RESPONSE=$(curl -s -X GET "https://api.x.ai/v1/videos/$VIDEO_ID" \
         -H "Authorization: Bearer $BACKUP_API_KEY")
@@ -143,6 +144,7 @@ if [ "$IMAGE_URL" != "null" ] || [ !-z "$IMAGE_URL" ] || [ "$VIDEO" == "ON"] ; t
     if [ "$VIDEO_STATUS" != "" ]; then
       break
     fi
+    i=$((i+1))
     sleep 1
   done
   VIDEO_URL=$(echo $VIDEO_RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
