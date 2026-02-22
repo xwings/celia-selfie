@@ -94,7 +94,7 @@ Render this image as make make a pic of this person. by herself at [$USER_CONTEX
 Render this image as make make a pic of this person. by herself at living room, looking straight into the lens, eyes centered and clearly visible smile and wink. WITHOUT Depth of field.
 ```
 
-### Step 3: Generate Video Prompt if required
+### Step 3: Generate Video Prompt if required (If user mention generate video, this is your prompt)
 
 **VIDEO_PROMPT** 
 Video promt will be based on following action right after the image action or location. Keep it short, just like the example.
