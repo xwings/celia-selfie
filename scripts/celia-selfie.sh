@@ -104,7 +104,9 @@ fi
 IMAGE_URL=$(echo $RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
 
 if [ "$IMAGE_URL" == "null" ] || [ -z "$IMAGE_URL" ] || [[ ! "$IMAGE_URL" =~ \.png$ ]]; then
-  printf "\n\nSwitch model, Error with Raw Response: $RESPONSE"
+  printf "\n\nError with Raw Response: $RESPONSE"
+  printf "\n\nSwitch model"
+  
   JSON_PAYLOAD="{\"model\": \"grok-imagine-image-pro\", \"prompt\": \"$USER_CONTEXT_ESCAPED\", \"image\": {\"url\": $REFERENCE_IMAGE\"\", \"type\": \"image_url\"} }"
   # Call API
   RESPONSE=$(curl -s -X POST "curl -X POST https://api.x.ai/v1/images/edits" \
