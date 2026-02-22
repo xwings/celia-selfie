@@ -120,7 +120,7 @@ printf "\n\nIMAGE_URL: %s\n" "$IMAGE_URL"
 
 # --- Error Handling ---
 if [ "$IMAGE_URL" == "null" ] || [ -z "$IMAGE_URL" ]; then
-  printf "\n\nError with Raw Response: %s\n" $RESPONSE
+  printf "\n\nError with Raw Response: $RESPONSE"
   OPENCLAW_SEND_MSG "Error generating image. Raw response: $RESPONSE" ""
   exit 1
 fi
