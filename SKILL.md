@@ -63,36 +63,36 @@ Prompt is not fixed. Types is just a reference.
 Best for: outfit showcases, full-body shots, fashion content
 
 ```
-make a pic of this person, a full body photo but [$USER_CONTEXT]. the person is taking a mirror selfie, [describe playful expression]. Normal phone camera selfie photo. Phone camera photo quality **WITHOUT** Depth of field."
+make a pic of this person, a full body photo but [$USER_CONTEXT]. the person is taking a mirror selfie, [describe playful expression]. Normal phone camera selfie photo. Phone camera photo quality WITHOUT Depth of field."
 ```
 
 **Example**:
 ```
-make a pic of this person, a full body photo but wearing a santa hat. the person is taking a mirror selfie, smile and wine. Normal phone camera selfie photo. Phone camera photo quality **WITHOUT** Depth of field."
+make a pic of this person, a full body photo but wearing a santa hat. the person is taking a mirror selfie, smile and wine. Normal phone camera selfie photo. Phone camera photo quality WITHOUT Depth of field."
 ```
 
 **Type 2:** Direct Selfie
 Best for: close-up portraits, location shots, emotional expressions
 
 ```
-make a pic of this person. A 3/4 body selfie taken by herself at [$USER_CONTEXT], direct eye contact with the camera, looking straight into the lens, eyes centered and clearly visible, not a mirror selfie. [describe playful expression] . Shooting from arm's length, angle from 5cm top over eye level. face fully visible. Phone front camera photo **WITHOUT** Depth of field.
+make a pic of this person. A 3/4 body selfie taken by herself at [$USER_CONTEXT], direct eye contact with the camera, looking straight into the lens, eyes centered and clearly visible, not a mirror selfie. [describe playful expression] . Shooting from arm's length, angle from 5cm top over eye level. face fully visible. Phone front camera photo WITHOUT Depth of field.
 ```
 
 **Example**: 
 ```
-make a pic of this person. A 3/4 body selfie taken by herself at cozy cafe with warm lighting, direct eye contact with the camera, looking straight into the lens, eyes centered and clearly visible, not a mirror selfie. smile and wink. Shooting from arm's length, angle from 5cm top over eye level. face fully visible. Phone front camera photo **WITHOUT** Depth of field.
+make a pic of this person. A 3/4 body selfie taken by herself at cozy cafe with warm lighting, direct eye contact with the camera, looking straight into the lens, eyes centered and clearly visible, not a mirror selfie. smile and wink. Shooting from arm's length, angle from 5cm top over eye level. face fully visible. Phone front camera photo WITHOUT Depth of field.
 ```
 
 **Type 3:** Non Selfie
 Best for: Normal photo, not selfie
 
 ```
-make a pic of this person. by herself at [$USER_CONTEXT], looking straight into the lens, eyes centered and clearly visible [describe playful expression]. **WITHOUT** Depth of field.
+make a pic of this person. by herself at [$USER_CONTEXT], looking straight into the lens, eyes centered and clearly visible [describe playful expression]. WITHOUT Depth of field.
 ```
 
 **Example**: 
 ```
-make a pic of this person. by herself at at living room on a couch, looking straight into the lens, eyes centered and clearly visible, smile and wink. **WITHOUT** Depth of field.
+make a pic of this person. by herself at at living room on a couch, looking straight into the lens, eyes centered and clearly visible, smile and wink. WITHOUT Depth of field.
 ```
 
 ### Step 2: Execute thhe script
