@@ -125,8 +125,8 @@ if [ "$IMAGE_URL" == "null" ] || [ -z "$IMAGE_URL" ]; then
   exit 1
 fi
 
-wget -O ~/image.png $IMAGE_URL
-OPENCLAW_SEND_MSG "$(realpath image.png)" "~/image.png"
-rm ~/image.png
+wget -O image.png $IMAGE_URL
+OPENCLAW_SEND_MSG "$(realpath image.png)" "image.png"
+rm image.png
 
 printf "\n\nStatus: Done!\n\n"
