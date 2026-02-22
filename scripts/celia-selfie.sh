@@ -131,7 +131,7 @@ else
 fi
 
 if [ "$IMAGE_URL" != "" ] || [ ! -z "$IMAGE_URL" ] || [ ! -z "$VIDEO" ] ; then
-  VIDEO_PROMPT="$VIDEO"
+  VIDEO_PROMPT=$(echo "$VIDEO" | sed 's/"/\\\\"/g')
   
   JSON_PAYLOAD="{\"model\": \"grok-imagine-video\", \"prompt\": \"$VIDEO_PROMPT\", \"image\": {\"url\": \"$IMAGE_URL\", \"duration\": 15}}"
   RESPONSE=$(curl -s -X POST "https://api.x.ai/v1/videos/generations" \
