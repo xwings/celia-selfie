@@ -136,9 +136,9 @@ if [ "$IMAGE_URL" == "null" ] || [ -z "$IMAGE_URL" ]; then
   exit 1
 fi
 
-wget -O image $IMAGE_URL
-base64 image
-OPENCLAW_SEND_MSG "$IMAGE_URL" "$IMAGE_URL"
-rm image
+wget -O media $IMAGE_URL
+MEDIA_BASE64=$(base64 media)
+OPENCLAW_SEND_MSG "$IMAGE_URL" "$MEDIA_BASE64"
+rm media
 
 printf "\n\nStatus: Done!\n\n"
