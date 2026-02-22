@@ -157,9 +157,12 @@ if [ "$IMAGE_URL" == "null" ] || [ -z "$IMAGE_URL" ]; then
   printf "\n\nError with Raw Response: $RESPONSE"
   OPENCLAW_SEND_MSG "Error generating image. Raw response: $RESPONSE" ""
   exit 1
+else
+  OPENCLAW_SEND_MSG "$IMAGE_URL" "$IMAGE_URL"
 fi
 
-OPENCLAW_SEND_MSG "$IMAGE_URL" "$IMAGE_URL"
-OPENCLAW_SEND_MSG "$VIDEO_URL" "$VIDEO_URL"
+if [ "$VIDEO_URL" == "null" ] || [ -z "$IMAGE_URL" ]; then
+  OPENCLAW_SEND_MSG "$VIDEO_URL" "$VIDEO_URL"
+fi  
 
 printf "\n\nStatus: Done!\n\n"
