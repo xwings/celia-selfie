@@ -102,7 +102,7 @@ printf "\n\nJSON Payload sent. Response: %s\n" "$RESPONSE"
 # --- Logic: Extract URL ---
 IMAGE_URL=$(echo $RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
 
-if [ "$IMAGE_URL" == "null" ] || [ -z "$IMAGE_URL" ]; then
+if [ "$IMAGE_URL" == "null" ] || [ -z "$IMAGE_URL" ] || [[ ! "$IMAGE_URL" =~ \.png$ ]];; then
   printf "\nSwitch model, Error with Raw Response: %s\n" $RESPONSE
   JSON_PAYLOAD="{\"image_url\": [\"$REFERENCE_IMAGE\"], \"prompt\": \"$USER_CONTEXT_ESCAPED\", \"image_size\": {\"width\": 1080, \"height\": 1920}, \"num_images\": 1, \"output_format\": \"png\"}"
   # Call API
