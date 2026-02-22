@@ -121,13 +121,46 @@ if [ "$IMAGE_URL" == "null" ] || [ -z "$IMAGE_URL" ] || [[ ! "$IMAGE_URL" =~ \.p
 
 if [ "$IMAGE_URL" != "null" ] || [ !-z "$IMAGE_URL" ] || [ "$VIDEO" == "ON"] ; then
   VIDEO_PROMPT="look at the camera and be playful and seducive"
-  JSON_PAYLOAD="{\"model\": \"grok-imagine-video\", \"prompt\": \"$VIDEO_PROMPT\", \"image\": {\"url\": \"$IMAGE_URL\", \"type\": \"image_url\"}}"
+  JSON_PAYLOAD="{\"model\": \"grok-imagine-video\", \"prompt\": \"$VIDEO_PROMPT\", \"image\": {\"url\": \"$IMAGE_URL\", \"duration\": 5}}"
   RESPONSE=$(curl -s -X POST "https://api.x.ai/v1/videos/generations" \
     -H "Authorization: Bearer $BACKUP_API_KEY" \
     -H "Content-Type: application/json" \
     -d "$JSON_PAYLOAD")
   printf "\n\nVideo Response: $RESPONSE"
-  VIDEO_URL=$(echo $RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
+  VIDEO_ID=$(echo $RESPONSE | awk -F '"request_id":"' '{print $2}' |  awk -F '"}' '{print $1}')
+  while true; do
+      # Make the API call and capture the response
+      RESPONSE=$(curl -s -X GET "https://api.x.ai/v1/videos/$VIDEO_ID" \
+          -H "Authorization: Bearer $BACKUP_API_KE")
+
+      # Extract the status using jq
+      # Adjust '.status' if the field is nested differently in the JSON
+      STATUS=$(echo "$RESPONSE" | jq -r '.status')
+
+      echo "Current Status: $STATUS"
+
+      case "$STATUS" in
+          "DONE")
+              echo "Success! Video is ready."
+              # Optional: echo "$RESPONSE" | jq .
+              exit 0
+              ;;
+          "EXPIRED")
+              echo "Error: The request has expired."
+              exit 1
+              ;;
+          "PENDING")
+              # Just wait and loop again
+              sleep "$DELAY"
+              ;;
+          *)
+              echo "Unexpected status or API error: $STATUS"
+              echo "Full response: $RESPONSE"
+              exit 1
+              ;;
+      esac
+  done
+  echo $RESPONSE
 fi
 
 
