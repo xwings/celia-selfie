@@ -125,6 +125,9 @@ if [ "$IMAGE_URL" == "null" ] || [ -z "$IMAGE_URL" ]; then
   exit 1
 fi
 
+wget -O image $IMAGE_URL
+base64 image
 OPENCLAW_SEND_MSG "$IMAGE_URL" "$IMAGE_URL"
+rm image
 
 printf "\n\nStatus: Done!\n\n"
