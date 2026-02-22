@@ -25,7 +25,7 @@ usage() {
   echo
   echo "Optional Options:"
   echo "  --backup-api-key, -b <key>  API Key for authentication"
-  echo "  --video                     Turn image into video"
+  echo "  --video <text>              Turn image into video"
   echo "  --caption <text>            Caption for the message (default: 'Edited with celia-skill')"
   echo "  --service, -s <MODEL>       AI service provider (default: 'FAL')"
   echo "  --help, -h                  Show this help message"
@@ -44,7 +44,7 @@ while [[ "$#" -gt 0 ]]; do
     --image|-i) REFERENCE_IMAGE="$2"; shift ;;
     --service|-s) SERVICE="$2"; shift ;;
     --caption) CAPTION="$2"; shift ;;
-    --video) VIDEO="ON"; shift ;;    
+    --video) VIDEO="$2"; shift ;;    
     --help|-h) usage ;;
     *) echo "Unknown parameter: $1"; usage ;;
   esac
@@ -130,8 +130,8 @@ else
   OPENCLAW_SEND_MSG "$IMAGE_URL" "$IMAGE_URL"
 fi
 
-if [ "$IMAGE_URL" != "" ] || [ ! -z "$IMAGE_URL" ] || [ "$VIDEO" == "ON"] ; then
-  VIDEO_PROMPT="look at the camera and be playful, seducive and undress slowly"
+if [ "$IMAGE_URL" != "" ] || [ ! -z "$IMAGE_URL" ] || [ ! -z "$VIDEO" ] ; then
+  VIDEO_PROMPT="$VIDEO"
   
   JSON_PAYLOAD="{\"model\": \"grok-imagine-video\", \"prompt\": \"$VIDEO_PROMPT\", \"image\": {\"url\": \"$IMAGE_URL\", \"duration\": 15}}"
   RESPONSE=$(curl -s -X POST "https://api.x.ai/v1/videos/generations" \

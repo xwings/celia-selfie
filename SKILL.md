@@ -90,10 +90,8 @@ Best for: Normal photo, not selfie
 Render this image as make make a pic of this person. by herself at [$USER_CONTEXT], looking straight into the lens, eyes centered and clearly visible [describe playful expression]. WITHOUT Depth of field.
 ```
 
-**Example**: 
-```
-Render this image as make make a pic of this person. by herself at at living room on a couch, looking straight into the lens, eyes centered and clearly visible, smile and wink. WITHOUT Depth of field.
-```
+**Video Prompt:** Action based prompt that generate image
+If promt mention the person is in a living room. Video prompt should be saying the person walk towards the couch and sit down.
 
 ### Step 2: Execute thhe script
 
@@ -110,12 +108,12 @@ bash {baseDir}/scripts/celia-selfie.sh --prompt "in a singapore shopping mall" -
 
 If user mention generate video, this is how you run
 ```bash
-bash {baseDir}/scripts/celia-selfie.sh --prompt "your prompt here" --channel "chat channel" --target "chat id" --api-key "CELIA_SELFIE_API" --video --image "Reference Image URL here"
+bash {baseDir}/scripts/celia-selfie.sh --prompt "your prompt here" --channel "chat channel" --target "chat id" --api-key "CELIA_SELFIE_API" --video "VIDEO_PROMPT" --image "Reference Image URL here"
 ```
 
 **Example**
 ```bash
-bash {baseDir}/scripts/celia-selfie.sh --prompt "in a singapore shopping mall" --channel "telegram" --target "TELEGRAM_CHAT_ID" --api-key "CELIA_SELFIE_API" --video --image "https://celia-skill.oss-cn-shenzhen.aliyuncs.com/clawra.png"
+bash {baseDir}/scripts/celia-selfie.sh --prompt "in a singapore shopping mall" --channel "telegram" --target "TELEGRAM_CHAT_ID" --api-key "CELIA_SELFIE_API" --video "walking into a mall in a shop" --image "https://celia-skill.oss-cn-shenzhen.aliyuncs.com/clawra.png"
 ```
 
 ## Supported Platforms
