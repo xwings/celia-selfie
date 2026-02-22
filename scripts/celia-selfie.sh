@@ -139,6 +139,7 @@ if [ "$IMAGE_URL" != "" ] || [ ! -z "$IMAGE_URL" ] || [ ! -z "$VIDEO" ] ; then
     -H "Content-Type: application/json" \
     -d "$JSON_PAYLOAD")
   
+  printf "\n\VIDEO_PROMPT: $VIDEO_PROMPT"
   printf "\n\nVideo Response: $RESPONSE"
   VIDEO_ID=$(echo $RESPONSE | awk -F '"request_id":"' '{print $2}' |  awk -F '"}' '{print $1}')
   printf "\n\nVIDEO_ID: $VIDEO_ID"
