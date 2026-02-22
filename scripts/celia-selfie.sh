@@ -100,23 +100,22 @@ elif [ "$SERVICE" == "HUOSHANYUN" ]; then
     -d "$JSON_PAYLOAD")
 fi
 
+printf "\n\nRaw Response: $RESPONSE"
 # --- Logic: Extract URL ---
 IMAGE_URL=$(echo $RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
 
 if [ "$IMAGE_URL" == "null" ] || [ -z "$IMAGE_URL" ] || [[ ! "$IMAGE_URL" =~ \.png$ ]]; then
-  printf "\n\nError with Raw Response: $RESPONSE"
   printf "\n\nSwitch model"
-  
   JSON_PAYLOAD="{\"model\": \"grok-imagine-image-pro\", \"prompt\": \"$USER_CONTEXT_ESCAPED\", \"image\": {\"url\": $REFERENCE_IMAGE\"\", \"type\": \"image_url\"} }"
   # Call API
   RESPONSE=$(curl -s -X POST "curl -X POST https://api.x.ai/v1/images/edits" \
     -H "Authorization: Bearer $BACKUP_API_KEY" \
     -H "Content-Type: application/json" \
     -d "$JSON_PAYLOAD")
-  IMAGE_URL=$(echo $RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')    
+  printf "\n\nRaw Response: $RESPONSE"
+  IMAGE_URL=$(echo $RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
 fi
 
-printf "\n\nJSON Payload sent. Response: %s\n" "$RESPONSE"
 printf "\n\nIMAGE_URL: %s\n" "$IMAGE_URL"
 
 # --- Error Handling ---
