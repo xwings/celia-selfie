@@ -106,7 +106,7 @@ IMAGE_URL=$(echo $RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{pri
 
 if [ "$IMAGE_URL" == "null" ] || [ -z "$IMAGE_URL" ] || [[ ! "$IMAGE_URL" =~ \.png$ ]]; then
   printf "\n\nSwitch model"
-  JSON_PAYLOAD="{\"model\": \"grok-imagine-image-pro\", \"prompt\": \"$USER_CONTEXT_ESCAPED\", \"image\": {\"url\": \"$REFERENCE_IMAGE\", \"type\": \"image_url\"}}"
+  JSON_PAYLOAD="{\"model\": \"grok-imagine-image\", \"prompt\": \"$USER_CONTEXT_ESCAPED\", \"image\": {\"url\": \"$REFERENCE_IMAGE\", \"type\": \"image_url\"}}"
   # Call API
   RESPONSE=$(curl -s -X POST "https://api.x.ai/v1/images/edits" \
     -H "Authorization: Bearer $BACKUP_API_KEY" \
