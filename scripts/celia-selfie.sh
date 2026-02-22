@@ -8,6 +8,7 @@ CHANNEL=""
 TARGET=""
 SERVICE="HUOSHANYUN"
 REFERENCE_IMAGE=""
+BLOCKED="sensitive"
 
 # --- Help Function ---
 usage() {
@@ -97,6 +98,15 @@ elif [ "$SERVICE" == "HUOSHANYUN" ]; then
 fi
 
 printf "\nJSON Payload sent. Response: %s\n" "$RESPONSE"
+
+if echo "$RESPONSE" | grep -q -i "$substring"; then
+  JSON_PAYLOAD="{\"image_urls\": [\"$REFERENCE_IMAGE\"], \"prompt\": \"$USER_CONTEXT_ESCAPED\", \"image_size\": {\"width\": 1080, \"height\": 1920}, \"num_images\": 1, \"output_format\": \"png\"}"
+  # Call API
+  RESPONSE=$(curl -s -X POST "curl -X POST https://fal.run/xai/grok-imagine-image-pro" \
+    -H "Authorization: Key $API_KEY" \
+    -H "Content-Type: application/json" \
+    -d "$JSON_PAYLOAD")
+fi
 
 # --- Logic: Extract URL ---
 IMAGE_URL=$(echo "$RESPONSE" | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
