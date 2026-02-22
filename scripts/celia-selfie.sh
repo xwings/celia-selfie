@@ -107,7 +107,7 @@ printf "\n\nRaw Response: $RESPONSE"
 # --- Logic: Extract URL ---
 IMAGE_URL=$(echo $RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
 
-if [ -n "$IMAGE_URL" ] || [[ ! "$IMAGE_URL" =~ \.png$ ]]; then
+if [ ! -n "$IMAGE_URL" ] || [[ ! "$IMAGE_URL" =~ \.png$ ]]; then
   printf "\n\nSwitch model"
   JSON_PAYLOAD="{\"model\": \"grok-imagine-image\", \"prompt\": \"$USER_CONTEXT_ESCAPED\", \"image\": {\"url\": \"$REFERENCE_IMAGE\", \"type\": \"image_url\"}}"
   # Call API
@@ -122,7 +122,7 @@ fi
 printf "\n\nIMAGE_URL: $IMAGE_URL"
 
 # --- Error Handling ---
-if [ "$IMAGE_URL" == "" ] || [ -z "$IMAGE_URL" ]; then
+if [ ! -n "$IMAGE_URL" ]; then
   printf "\n\nError with Raw Response: $RESPONSE"
   OPENCLAW_SEND_MSG "Error generating image. Raw response: $RESPONSE" ""
   exit 1
