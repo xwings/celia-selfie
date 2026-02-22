@@ -75,7 +75,7 @@ if [ -z "$USER_CONTEXT" ] || [ -z "$CHANNEL" ] || [ -z "$CHANNEL" ] || [ -z "$RE
   exit 1
 fi
 
-printf "Editing reference image with prompt: $USER_CONTEXT"
+printf "\n\nEditing reference image with prompt: %s\n" $USER_CONTEXT
 
 # --- Logic: API Request ---
 # Using a heredoc for cleaner JSON formatting
@@ -97,7 +97,7 @@ elif [ "$SERVICE" == "HUOSHANYUN" ]; then
     -d "$JSON_PAYLOAD")
 fi
 
-printf "\nJSON Payload sent. Response: %s\n" "$RESPONSE"
+printf "\n\nJSON Payload sent. Response: %s\n" "$RESPONSE"
 
 # --- Logic: Extract URL ---
 IMAGE_URL=$(echo $RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
@@ -113,15 +113,15 @@ if [ "$IMAGE_URL" == "null" ] || [ -z "$IMAGE_URL" ]; then
   IMAGE_URL=$(echo $RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')    
 fi
 
-printf "\nIMAGE_URL: %s\n" "$IMAGE_URL"
+printf "\n\nIMAGE_URL: %s\n" "$IMAGE_URL"
 
 # --- Error Handling ---
 if [ "$IMAGE_URL" == "null" ] || [ -z "$IMAGE_URL" ]; then
-  echo "Error with Raw Response: $RESPONSE"
+  printf "\n\nError with Raw Response: %s\n" $RESPONSE
   OPENCLAW_SEND_MSG "Error generating image. Raw response: $RESPONSE" ""
   exit 1
 fi
 
 OPENCLAW_SEND_MSG "" "$IMAGE_URL"
 
-echo "Done!"
+printf "\n\nStatus: Done!\n\n"
