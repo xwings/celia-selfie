@@ -18,10 +18,10 @@ https://celia-skill.oss-cn-shenzhen.aliyuncs.com/clawra.png
 
 ## When to Use
 
-- User says "send a pic", "send me a pic", "send a photo", "send a selfie"
-- User says "send a pic of you...", "send a selfie of you..."
+- User says "send a pic", "send me a pic", "send a photo", "send a selfie", "send a video"
+- User says "send a pic of you...", "send a selfie of you...", "send a video of you..."
 - User asks "what are you doing?", "how are you doing?", "where are you?"
-- User describes a context: "send a pic wearing...", "send a pic at..."
+- User describes a context: "send a pic wearing...", "send a pic at...", "send a video wearing...", "send a video at..."
 - User wants Celia to appear in a specific outfit, location, or situation
 
 ## Quick Reference
