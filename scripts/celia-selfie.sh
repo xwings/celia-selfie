@@ -108,7 +108,7 @@ if [ "$IMAGE_URL" == "null" ] || [ -z "$IMAGE_URL" ] || [[ ! "$IMAGE_URL" =~ \.p
   printf "\n\nSwitch model"
   JSON_PAYLOAD="{\"model\": \"grok-imagine-image-pro\", \"prompt\": \"$USER_CONTEXT_ESCAPED\", \"image\": {\"url\": \"$REFERENCE_IMAGE\", \"type\": \"image_url\"}}"
   # Call API
-  RESPONSE=$(curl -s -X POST "curl -X POST https://api.x.ai/v1/images/edits" \
+  RESPONSE=$(curl -s -X POST "https://api.x.ai/v1/images/edits" \
     -H "Authorization: Bearer $BACKUP_API_KEY" \
     -H "Content-Type: application/json" \
     -d "$JSON_PAYLOAD")
