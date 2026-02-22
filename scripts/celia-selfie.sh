@@ -126,8 +126,8 @@ if [ "$IMAGE_URL" != "null" ] || [ !-z "$IMAGE_URL" ] || [ "$VIDEO" == "ON"] ; t
     -H "Authorization: Bearer $BACKUP_API_KEY" \
     -H "Content-Type: application/json" \
     -d "$JSON_PAYLOAD")
- printf "\n\nVideo Response: $RESPONSE"
- IMAGE_URL=$(echo $RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
+  printf "\n\nVideo Response: $RESPONSE"
+  VIDEO_URL=$(echo $RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
 fi
 
 
@@ -141,5 +141,6 @@ if [ "$IMAGE_URL" == "null" ] || [ -z "$IMAGE_URL" ]; then
 fi
 
 OPENCLAW_SEND_MSG "$IMAGE_URL" "$IMAGE_URL"
+OPENCLAW_SEND_MSG "$VIDEO_URL" "$VIDEO_URL"
 
 printf "\n\nStatus: Done!\n\n"
