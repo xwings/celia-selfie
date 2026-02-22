@@ -107,7 +107,7 @@ printf "\n\nRaw Response: $RESPONSE"
 # --- Logic: Extract URL ---
 IMAGE_URL=$(echo $RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
 
-if [ "$IMAGE_URL" == "" ] || [ -z "$IMAGE_URL" ] || [[ ! "$IMAGE_URL" =~ \.png$ ]]; then
+if [ -n "$IMAGE_URL" ] || [[ ! "$IMAGE_URL" =~ \.png$ ]]; then
   printf "\n\nSwitch model"
   JSON_PAYLOAD="{\"model\": \"grok-imagine-image\", \"prompt\": \"$USER_CONTEXT_ESCAPED\", \"image\": {\"url\": \"$REFERENCE_IMAGE\", \"type\": \"image_url\"}}"
   # Call API
@@ -130,7 +130,7 @@ else
   OPENCLAW_SEND_MSG "$IMAGE_URL" "$IMAGE_URL"
 fi
 
-if [[ "$IMAGE_URL" != "" ] || [ ! -z "$IMAGE_URL" ]] && [ ! -z "$VIDEO" ] ; then
+if [[ -n "$IMAGE_URL" && -n "$VIDEO" ]]; then
   VIDEO_PROMPT=$(echo "$VIDEO" | sed 's/"/\\\\"/g')
   
   JSON_PAYLOAD="{\"model\": \"grok-imagine-video\", \"prompt\": \"$VIDEO_PROMPT\", \"image\": {\"url\": \"$IMAGE_URL\", \"duration\": 15}}"
@@ -167,7 +167,7 @@ if [[ "$IMAGE_URL" != "" ] || [ ! -z "$IMAGE_URL" ]] && [ ! -z "$VIDEO" ] ; then
 fi
 
 # --- Error Handling ---
-if [ "$VIDEO_URL" == "" ] || [ -z "$VIDEO_URL" ]; then
+if [ -n "$VIDEO_URL" ]; then
   printf "\n\nError with Raw Response: $VIDEO_RESPONSE"
   OPENCLAW_SEND_MSG "Error generating image. Raw response: $VIDEO_RESPONSE" ""
   exit 1
