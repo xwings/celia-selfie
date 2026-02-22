@@ -131,7 +131,7 @@ else
 fi
 
 if [ "$IMAGE_URL" != "" ] || [ ! -z "$IMAGE_URL" ] || [ "$VIDEO" == "ON"] ; then
-  VIDEO_PROMPT="look at the camera and be playful and seducive"
+  VIDEO_PROMPT="look at the camera and be playful, seducive and dress off slowly"
   JSON_PAYLOAD="{\"model\": \"grok-imagine-video\", \"prompt\": \"$VIDEO_PROMPT\", \"image\": {\"url\": \"$IMAGE_URL\", \"duration\": 5}}"
   RESPONSE=$(curl -s -X POST "https://api.x.ai/v1/videos/generations" \
     -H "Authorization: Bearer $BACKUP_API_KEY" \
