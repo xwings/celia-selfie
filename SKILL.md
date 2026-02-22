@@ -94,6 +94,8 @@ Render this image as make make a pic of this person. by herself at [$USER_CONTEX
 Render this image as make make a pic of this person. by herself at living room, looking straight into the lens, eyes centered and clearly visible smile and wink. WITHOUT Depth of field.
 ```
 
+### Step 3: Generate Video Prompt if required
+
 **VIDEO_PROMPT** 
 Video promt will be based on following action right after the image action or location. Keep it short, just like the example.
 
@@ -113,7 +115,7 @@ Image prompt says the person is in a bed room. Video prompt should be something 
 smile and wink and say good night
 ```
 
-### Step 2: Execute thhe script
+### Step 4: Execute thhe script
 
 This is how to run:
 
