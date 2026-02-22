@@ -137,14 +137,14 @@ if [ "$IMAGE_URL" != "null" ] || [ !-z "$IMAGE_URL" ] || [ "$VIDEO" == "ON"] ; t
     # Adjust '.status' if the field is nested differently in the JSON
     VIDEO_STATUS=$(echo "$VIDE_RESPONSE" | grep "url")
 
-    print "\n\nCurrent Status: $VIDEO_STATUS"
+    printf "\n\nCurrent Status: $VIDEO_STATUS"
 
     if [ "$VIDEO_STATUS" != "null" ] || [ !-z "$VIDEO_STATUS" ]; then
       break
     fi
   done
   VIDEO_URL=$(echo $VIDE_RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
-  printf "\n\VIDEO_URL: $VIDEO_URL"
+  printf "\n\nVIDEO_URL: $VIDEO_URL"
 fi
 
 
