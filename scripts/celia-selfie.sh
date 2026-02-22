@@ -149,8 +149,8 @@ if [ "$IMAGE_URL" != "" ] || [ ! -z "$IMAGE_URL" ] || [ "$VIDEO" == "ON"] ; then
   i=0
   while [ $i -le 60 ]; do
     # Make the API call and capture the response
-    VIDEO_RESPONSE=$(curl -s -X GET "https://api.x.ai/v1/videos/$VIDEO_ID" \
-        -H "Authorization: Bearer $BACKUP_API_KEY")
+    VIDEO_RESPONSE=$(curl -s -X GET "https://queue.fal.run/fal-ai/kling-video/requests/$VIDEO_ID/status" \
+        -H "Authorization: Key $API_KEY")
 
     # Extract the status using jq
     # Adjust '.status' if the field is nested differently in the JSON
