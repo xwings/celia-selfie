@@ -143,6 +143,7 @@ if [ "$IMAGE_URL" != "null" ] || [ !-z "$IMAGE_URL" ] || [ "$VIDEO" == "ON"] ; t
     if [ "$VIDEO_STATUS" != "" ]; then
       break
     fi
+    sleep 1
   done
   VIDEO_URL=$(echo $VIDEO_RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
   printf "\n\nVIDEO_URL: $VIDEO_URL"
