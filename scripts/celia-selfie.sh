@@ -73,6 +73,7 @@ fi
 if [ -z "$USER_CONTEXT" ] || [ -z "$CHANNEL" ] || [ -z "$CHANNEL" ] || [ -z "$REFERENCE_IMAGE" ]; then
   echo "Error: --context, --channel, --target and --image are required."
   usage
+  exit 1
 fi
 
 printf "Editing reference image with prompt: $USER_CONTEXT"
@@ -100,7 +101,7 @@ fi
 printf "\nJSON Payload sent. Response: %s\n" "$RESPONSE"
 
 if echo "$RESPONSE" | grep -q -i "$substring"; then
-  JSON_PAYLOAD="{\"image_urls\": [\"$REFERENCE_IMAGE\"], \"prompt\": \"$USER_CONTEXT_ESCAPED\", \"image_size\": {\"width\": 1080, \"height\": 1920}, \"num_images\": 1, \"output_format\": \"png\"}"
+  JSON_PAYLOAD="{\"image_url\": [\"$REFERENCE_IMAGE\"], \"prompt\": \"$USER_CONTEXT_ESCAPED\", \"image_size\": {\"width\": 1080, \"height\": 1920}, \"num_images\": 1, \"output_format\": \"png\"}"
   # Call API
   RESPONSE=$(curl -s -X POST "curl -X POST https://fal.run/xai/grok-imagine-image-pro" \
     -H "Authorization: Key $API_KEY" \
