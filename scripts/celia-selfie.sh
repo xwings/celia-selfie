@@ -8,7 +8,7 @@ CHANNEL=""
 TARGET=""
 SERVICE="HUOSHANYUN"
 REFERENCE_IMAGE=""
-BLOCKED="sensitive"
+
 
 # --- Help Function ---
 usage() {
@@ -99,7 +99,10 @@ fi
 
 printf "\nJSON Payload sent. Response: %s\n" "$RESPONSE"
 
-if $(echo "$RESPONSE" | grep -q -i "$substring") || [ "$RESPONSE" == "" ] || [ -z "$RESPONSE" ]; then
+# --- Logic: Extract URL ---
+IMAGE_URL=$(echo $RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
+
+if [ "$IMAGE_URL" == "null" ] || [ -z "$IMAGE_URL" ]; then
   printf "\nSwitch model, Error with Raw Response: %s\n" $RESPONSE
   JSON_PAYLOAD="{\"image_url\": [\"$REFERENCE_IMAGE\"], \"prompt\": \"$USER_CONTEXT_ESCAPED\", \"image_size\": {\"width\": 1080, \"height\": 1920}, \"num_images\": 1, \"output_format\": \"png\"}"
   # Call API
@@ -107,10 +110,8 @@ if $(echo "$RESPONSE" | grep -q -i "$substring") || [ "$RESPONSE" == "" ] || [ -
     -H "Authorization: Key $API_KEY" \
     -H "Content-Type: application/json" \
     -d "$JSON_PAYLOAD")
+  IMAGE_URL=$(echo $RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')    
 fi
-
-# --- Logic: Extract URL ---
-IMAGE_URL=$(echo $RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
 
 printf "\nIMAGE_URL: %s\n" "$IMAGE_URL"
 
