@@ -132,14 +132,20 @@ fi
 
 if [ "$IMAGE_URL" != "" ] || [ ! -z "$IMAGE_URL" ] || [ "$VIDEO" == "ON"] ; then
   VIDEO_PROMPT="look at the camera and be playful, seducive and dress off slowly"
-  JSON_PAYLOAD="{\"model\": \"grok-imagine-video\", \"prompt\": \"$VIDEO_PROMPT\", \"image\": {\"url\": \"$IMAGE_URL\", \"duration\": 5}}"
-  RESPONSE=$(curl -s -X POST "https://api.x.ai/v1/videos/generations" \
-    -H "Authorization: Bearer $BACKUP_API_KEY" \
+  
+  JSON_PAYLOAD="{\"model\": \"grok-imagine-video\", \"prompt\": \"$VIDEO_PROMPT\", \"start_image_url\": \"$IMAGE_URL\", \"duration\": 8}"
+  RESPONSE=$(curl -s -X POST "https://queue.fal.run/fal-ai/kling-video/v3/pro/image-to-video" \
+    -H "Authorization: Key $API_KEY" \
     -H "Content-Type: application/json" \
     -d "$JSON_PAYLOAD")
+  
+  REQUEST_ID=$(echo "$response" | grep -o '"request_id": *"[^"]*"' | sed 's/"request_id": *//; s/"//g')
+
   printf "\n\nVideo Response: $RESPONSE"
-  VIDEO_ID=$(echo $RESPONSE | awk -F '"request_id":"' '{print $2}' |  awk -F '"}' '{print $1}')
+  VIDEO_ID=$(echo "$RESPONSE" | grep -o '"request_id": *"[^"]*"' | sed 's/"request_id": *//; s/"//g')
+  #VIDEO_ID=$(echo $RESPONSE | awk -F '"request_id":"' '{print $2}' |  awk -F '"}' '{print $1}')
   printf "\n\nVIDEO_ID: $VIDEO_ID"
+  
   i=0
   while [ $i -le 60 ]; do
     # Make the API call and capture the response
