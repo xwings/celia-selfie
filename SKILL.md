@@ -96,7 +96,7 @@ Render this image as make make a pic of this person. by herself at living room, 
 
 ### Step 3: Generate Video Prompt if required (If user mention generate video, this is your prompt)
 
-**VIDEO_PROMPT** 
+**Video prompt** 
 Video promt will be based on following action right after the image action or location. Keep it short, just like the example.
 
 **Example:**:
@@ -130,7 +130,7 @@ bash {baseDir}/scripts/celia-selfie.sh --prompt "in a singapore shopping mall" -
 
 If user mention generate video, this is how you run
 ```bash
-bash {baseDir}/scripts/celia-selfie.sh --prompt "your prompt here" --channel "chat channel" --target "chat id" --api-key "CELIA_SELFIE_API" --video "VIDEO_PROMPT" --image "Reference Image URL here"
+bash {baseDir}/scripts/celia-selfie.sh --prompt "your prompt here" --channel "chat channel" --target "chat id" --api-key "CELIA_SELFIE_API" --video "your video prompt here" --image "Reference Image URL here"
 ```
 
 **Example**
