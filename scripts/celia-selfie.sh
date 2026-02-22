@@ -130,7 +130,7 @@ else
   OPENCLAW_SEND_MSG "$IMAGE_URL" "$IMAGE_URL"
 fi
 
-if [ "$IMAGE_URL" != "" ] || [ ! -z "$IMAGE_URL" ] || [ ! -z "$VIDEO" ] ; then
+if [[ "$IMAGE_URL" != "" ] || [ ! -z "$IMAGE_URL" ]] && [ ! -z "$VIDEO" ] ; then
   VIDEO_PROMPT=$(echo "$VIDEO" | sed 's/"/\\\\"/g')
   
   JSON_PAYLOAD="{\"model\": \"grok-imagine-video\", \"prompt\": \"$VIDEO_PROMPT\", \"image\": {\"url\": \"$IMAGE_URL\", \"duration\": 15}}"
@@ -139,7 +139,7 @@ if [ "$IMAGE_URL" != "" ] || [ ! -z "$IMAGE_URL" ] || [ ! -z "$VIDEO" ] ; then
     -H "Content-Type: application/json" \
     -d "$JSON_PAYLOAD")
   
-  printf "\n\VIDEO_PROMPT: $VIDEO_PROMPT"
+  printf "\n\nVIDEO_PROMPT: $VIDEO_PROMPT"
   printf "\n\nVideo Response: $RESPONSE"
   VIDEO_ID=$(echo $RESPONSE | awk -F '"request_id":"' '{print $2}' |  awk -F '"}' '{print $1}')
   printf "\n\nVIDEO_ID: $VIDEO_ID"
