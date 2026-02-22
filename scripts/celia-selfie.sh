@@ -99,7 +99,7 @@ fi
 
 printf "\nJSON Payload sent. Response: %s\n" "$RESPONSE"
 
-if echo "$RESPONSE" | grep -q -i "$substring"; then
+if (echo "$RESPONSE" | grep -q -i "$substring") || ( "$RESPONSE" == "" ); then
   JSON_PAYLOAD="{\"image_url\": [\"$REFERENCE_IMAGE\"], \"prompt\": \"$USER_CONTEXT_ESCAPED\", \"image_size\": {\"width\": 1080, \"height\": 1920}, \"num_images\": 1, \"output_format\": \"png\"}"
   # Call API
   RESPONSE=$(curl -s -X POST "curl -X POST https://fal.run/xai/grok-imagine-image-pro" \
@@ -115,8 +115,7 @@ printf "\nIMAGE_URL: %s\n" "$IMAGE_URL"
 
 # --- Error Handling ---
 if [ "$IMAGE_URL" == "null" ] || [ -z "$IMAGE_URL" ]; then
-  echo "Error: Failed to edit image or parse response."
-  echo "Raw Response: $RESPONSE"
+  echo "Error with Raw Response: $RESPONSE"
   OPENCLAW_SEND_MSG "Error generating image. Raw response: $RESPONSE" ""
   exit 1
 fi
