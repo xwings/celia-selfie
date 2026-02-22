@@ -100,7 +100,7 @@ fi
 printf "\nJSON Payload sent. Response: %s\n" "$RESPONSE"
 
 if $(echo "$RESPONSE" | grep -q -i "$substring") || [ "$RESPONSE" == "" ] || [ -z "$RESPONSE" ]; then
-  echo "Switch model, Error with Raw Response: $RESPONSE"
+  printf "\nSwitch model, Error with Raw Response: %s\n" $RESPONSE
   JSON_PAYLOAD="{\"image_url\": [\"$REFERENCE_IMAGE\"], \"prompt\": \"$USER_CONTEXT_ESCAPED\", \"image_size\": {\"width\": 1080, \"height\": 1920}, \"num_images\": 1, \"output_format\": \"png\"}"
   # Call API
   RESPONSE=$(curl -s -X POST "curl -X POST https://fal.run/xai/grok-imagine-image-pro" \
@@ -110,7 +110,7 @@ if $(echo "$RESPONSE" | grep -q -i "$substring") || [ "$RESPONSE" == "" ] || [ -
 fi
 
 # --- Logic: Extract URL ---
-IMAGE_URL=$(echo "$RESPONSE" | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
+IMAGE_URL=$(echo $RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
 
 printf "\nIMAGE_URL: %s\n" "$IMAGE_URL"
 
