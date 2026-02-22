@@ -75,7 +75,7 @@ if [ -z "$USER_CONTEXT" ] || [ -z "$CHANNEL" ] || [ -z "$CHANNEL" ] || [ -z "$RE
   exit 1
 fi
 
-printf "\n\nEditing reference image with prompt: %s\n" $USER_CONTEXT
+printf "\n\nEditing reference image with prompt: $USER_CONTEXT\n"
 
 # --- Logic: API Request ---
 # Using a heredoc for cleaner JSON formatting
