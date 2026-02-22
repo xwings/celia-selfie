@@ -114,6 +114,17 @@ if [ "$IMAGE_URL" == "null" ] || [ -z "$IMAGE_URL" ] || [[ ! "$IMAGE_URL" =~ \.p
     -d "$JSON_PAYLOAD")
   printf "\n\nRaw Response: $RESPONSE"
   IMAGE_URL=$(echo $RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
+  
+  if [ "$IMAGE_URL" == "null" ] || [ -z "$IMAGE_URL" ]; then
+    VIDEO_PROMPT="look at the camera and be playful and seducive"
+    JSON_PAYLOAD="{\"model\": \"grok-imagine-video\", \"prompt\": \"$USER_CONTEXT_ESCAPED\", \"image\": {\"url\": \"$IMAGE_URL\", \"type\": \"image_url\"}}"
+    RESPONSE=$(curl -s -X POST "https://api.x.ai/v1/videos/generations" \
+      -H "Authorization: Bearer $BACKUP_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d "$JSON_PAYLOAD")
+    printf "\n\nVideo Response: $RESPONSE"
+    IMAGE_URL=$(echo $RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
+  fi
 fi
 
 printf "\n\nIMAGE_URL: %s\n" "$IMAGE_URL"
