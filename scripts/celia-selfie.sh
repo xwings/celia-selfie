@@ -167,6 +167,8 @@ fi
 
 if [ "$VIDEO_URL" != "" ] || [ ! -z "$VIDEO_URL" ]; then
   OPENCLAW_SEND_MSG "$VIDEO_URL" "$VIDEO_URL"
-fi  
+else
+  OPENCLAW_SEND_MSG "$VIDEO_RESPONSE"
+fi
 
 printf "\n\nStatus: Done!\n\n"
