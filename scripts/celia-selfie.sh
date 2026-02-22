@@ -112,7 +112,7 @@ if [ "$IMAGE_URL" == "null" ] || [ -z "$IMAGE_URL" ] || [[ ! "$IMAGE_URL" =~ \.p
     -H "Authorization: Bearer $BACKUP_API_KEY" \
     -H "Content-Type: application/json" \
     -d "$JSON_PAYLOAD")
-  printf "\n\nRaw Response: $RESPONSE"
+  printf "\n\X Response: $RESPONSE"
   IMAGE_URL=$(echo $RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
   
   if [ "$IMAGE_URL" == "null" ] || [ -z "$IMAGE_URL" ]; then
