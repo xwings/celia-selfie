@@ -115,9 +115,9 @@ if [ "$IMAGE_URL" == "null" ] || [ -z "$IMAGE_URL" ] || [[ ! "$IMAGE_URL" =~ \.p
     -H "Authorization: Bearer $BACKUP_API_KEY" \
     -H "Content-Type: application/json" \
     -d "$JSON_PAYLOAD")
-  printf "\n\X Response: $RESPONSE"
+  printf "\n\nResponse: $RESPONSE"
   IMAGE_URL=$(echo $RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
-  fi
+fi
 
 if [ "$IMAGE_URL" != "null" ] || [ !-z "$IMAGE_URL" ] || [ "$VIDEO" == "ON"] ; then
   VIDEO_PROMPT="look at the camera and be playful and seducive"
@@ -129,38 +129,21 @@ if [ "$IMAGE_URL" != "null" ] || [ !-z "$IMAGE_URL" ] || [ "$VIDEO" == "ON"] ; t
   printf "\n\nVideo Response: $RESPONSE"
   VIDEO_ID=$(echo $RESPONSE | awk -F '"request_id":"' '{print $2}' |  awk -F '"}' '{print $1}')
   while true; do
-      # Make the API call and capture the response
-      RESPONSE=$(curl -s -X GET "https://api.x.ai/v1/videos/$VIDEO_ID" \
-          -H "Authorization: Bearer $BACKUP_API_KE")
+    # Make the API call and capture the response
+    VIDE_RESPONSE=$(curl -s -X GET "https://api.x.ai/v1/videos/$VIDEO_ID" \
+        -H "Authorization: Bearer $BACKUP_API_KEY")
 
-      # Extract the status using jq
-      # Adjust '.status' if the field is nested differently in the JSON
-      STATUS=$(echo "$RESPONSE" | jq -r '.status')
+    # Extract the status using jq
+    # Adjust '.status' if the field is nested differently in the JSON
+    VIDEO_STATUS=$(echo "$VIDE_RESPONSE" | grep "url")
 
-      echo "Current Status: $STATUS"
+    echo "Current Status: $VIDEO_STATUS"
 
-      case "$STATUS" in
-          "DONE")
-              echo "Success! Video is ready."
-              # Optional: echo "$RESPONSE" | jq .
-              exit 0
-              ;;
-          "EXPIRED")
-              echo "Error: The request has expired."
-              exit 1
-              ;;
-          "PENDING")
-              # Just wait and loop again
-              sleep "$DELAY"
-              ;;
-          *)
-              echo "Unexpected status or API error: $STATUS"
-              echo "Full response: $RESPONSE"
-              exit 1
-              ;;
-      esac
+    if [ "$VIDEO_STATUS" != "null" ] || [ !-z "$VIDEO_STATUS" ]
+      break
+    fi
   done
-  echo $RESPONSE
+  VIDEO_URL=$(echo $VIDE_RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
 fi
 
 
