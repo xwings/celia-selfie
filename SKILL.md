@@ -68,7 +68,7 @@ make a pic of this person, a full body photo but [$USER_CONTEXT]. the person is 
 
 **Example**:
 ```
-make a pic of this person, a full body photo but wearing a santa hat. the person is taking a mirror selfie, smile and wine. Normal phone camera selfie photo. Phone camera photo quality WITHOUT Depth of field."
+make a pic of this person, a full body photo but wearing a santa hat. the person is taking a mirror selfie, smile and wink. Normal phone camera selfie photo. Phone camera photo quality WITHOUT Depth of field."
 ```
 
 **Type 2:** Direct Selfie
