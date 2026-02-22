@@ -165,10 +165,13 @@ if [ "$IMAGE_URL" != "" ] || [ ! -z "$IMAGE_URL" ] || [ "$VIDEO" == "ON"] ; then
   printf "\n\nVIDEO_URL: $VIDEO_URL"
 fi
 
-if [ "$VIDEO_URL" != "" ] || [ ! -z "$VIDEO_URL" ]; then
-  OPENCLAW_SEND_MSG "$VIDEO_URL" "$VIDEO_URL"
+# --- Error Handling ---
+if [ "$VIDEO_URL" == "" ] || [ -z "$VIDEO_URL" ]; then
+  printf "\n\nError with Raw Response: $VIDEO_RESPONSE"
+  OPENCLAW_SEND_MSG "Error generating image. Raw response: $VIDEO_RESPONSE" ""
+  exit 1
 else
-  OPENCLAW_SEND_MSG "$VIDEO_RESPONSE"
+  OPENCLAW_SEND_MSG "$VIDEO_URL" "$VIDEO_URL"
 fi
 
 printf "\n\nStatus: Done!\n\n"
