@@ -164,7 +164,7 @@ if [[ -n "$IMAGE_URL" && -n "$VIDEO" ]]; then
 fi
 
 # --- Error Handling ---
-if [ "$IMAGE_URL" == "" ] || [ -z "$IMAGE_URL" ]; then
+if [ "$VIDEO_URL" == "" ] || [ -z "$VIDEO_URL" ]; then
   printf "\n\nError with Raw Response: $VIDEO_RESPONSE"
   OPENCLAW_SEND_MSG "Error generating video. Raw response: $VIDEO_RESPONSE"
   exit 1 
