@@ -167,12 +167,12 @@ if [[ -n "$IMAGE_URL" && -n "$VIDEO" ]]; then
 fi
 
 # --- Error Handling ---
-if [ ! -n "$VIDEO_URL" ]; then
+if [ -n "$VIDEO_URL" ]; then
+  OPENCLAW_SEND_MSG "" "$VIDEO_URL"
+else
   printf "\n\nError with Raw Response: $VIDEO_RESPONSE"
   OPENCLAW_SEND_MSG "Error generating video. Raw response: $VIDEO_RESPONSE" ""
-  exit 1
-else
-  OPENCLAW_SEND_MSG "" "$VIDEO_URL"
+  exit 1  
 fi
 
 printf "\n\nStatus: Done!\n\n"
