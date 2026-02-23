@@ -124,7 +124,7 @@ if [ "$IMAGE_URL" == "" ] || [ -z "$IMAGE_URL" ]; then
   OPENCLAW_SEND_MSG "Error generating image. Raw response: $RESPONSE"
   exit 1
 else
-  OPENCLAW_SEND_MSG "Image on the way. MEDIA: $VIDEO_URL"
+  OPENCLAW_SEND_MSG "Image on the way. MEDIA: $IMAGE_URL"
 fi
 
 if [[ -n "$IMAGE_URL" && -n "$VIDEO" ]]; then
