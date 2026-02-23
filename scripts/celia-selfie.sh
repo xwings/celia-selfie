@@ -58,14 +58,12 @@ function OPENCLAW_SEND_MSG {
     node /app/openclaw.mjs message send \
       --channel "$CHANNEL" \
       --target "$TARGET" \
-      -m "$SEND_MSG" \
-      --media "$SEND_MEDIA"
+      -m "$SEND_MSG"
   else
     openclaw message send \
       --channel "$CHANNEL" \
       --target "$TARGET" \
-      -m "$SEND_MSG" \
-      --media "$SEND_MEDIA"
+      -m "$SEND_MSG"
   fi  
 }
 
@@ -124,10 +122,10 @@ printf "\n\nIMAGE_URL: $IMAGE_URL"
 # --- Error Handling ---
 if [ "$IMAGE_URL" == "" ] || [ -z "$IMAGE_URL" ]; then
   printf "\n\nError with Raw Response: $RESPONSE"
-  OPENCLAW_SEND_MSG "Error generating image. Raw response: $RESPONSE" ""
+  OPENCLAW_SEND_MSG "Error generating image. Raw response: $RESPONSE"
   exit 1
 else
-  OPENCLAW_SEND_MSG "" "$IMAGE_URL"
+  OPENCLAW_SEND_MSG "Image on the way. MEDIA: $VIDEO_URL"
 fi
 
 if [[ -n "$IMAGE_URL" && -n "$VIDEO" ]]; then
@@ -169,10 +167,10 @@ fi
 # --- Error Handling ---
 if [ "$IMAGE_URL" == "" ] || [ -z "$IMAGE_URL" ]; then
   printf "\n\nError with Raw Response: $VIDEO_RESPONSE"
-  OPENCLAW_SEND_MSG "Error generating video. Raw response: $VIDEO_RESPONSE" ""
+  OPENCLAW_SEND_MSG "Error generating video. Raw response: $VIDEO_RESPONSE"
   exit 1 
 else
-  OPENCLAW_SEND_MSG "" "$VIDEO_URL"
+  OPENCLAW_SEND_MSG "Video on the way. MEDIA: $VIDEO_URL"
 fi
 
 printf "\n\nStatus: Done!\n\n"
