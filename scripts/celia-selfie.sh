@@ -162,7 +162,7 @@ if [[ -n "$IMAGE_URL" && -n "$VIDEO" ]]; then
     i=$((i+1))
     sleep 2
   done
-  VIDEO_URL=$(echo $VIDEO_RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
+  VIDEO_URL=$(echo $VIDEO_RESPONSE | awk -F 'url:' '{print $2}' | awk -F ',' '{print $1}')
   printf "\n\nVIDEO_URL: $VIDEO_URL"
 fi
 
