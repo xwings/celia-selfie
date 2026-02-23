@@ -53,7 +53,6 @@ done
 
 function OPENCLAW_SEND_MSG {
   local SEND_MSG=$1
-  local SEND_MEDIA=$2
   if ! command -v "openclaw" &> /dev/null; then
     node /app/openclaw.mjs message send \
       --channel "$CHANNEL" \
