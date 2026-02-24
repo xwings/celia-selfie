@@ -134,7 +134,7 @@ if [[ -n "$IMAGE_URL" && -n "$VIDEO" ]]; then
   if [ "$VIDEO_PROMPT_ESC" != "" ]; then
     VIDEO_PROMPT="Speak chinese. Put down the phone. Walk away from mirror. $VIDEO_PROMPT_ESC"
   else
-    VIDEO_PROMPT="$VIDEO_PROMPT_ESC"
+    VIDEO_PROMPT="Speak chinese. $VIDEO_PROMPT_ESC"
   fi
   
   JSON_PAYLOAD="{\"model\": \"grok-imagine-video\", \"prompt\": \"$VIDEO_PROMPT\", \"duration\": 15, \"image\": {\"url\": \"$IMAGE_URL\"}}"
