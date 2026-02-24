@@ -132,7 +132,7 @@ if [[ -n "$IMAGE_URL" && -n "$VIDEO" ]]; then
   VIDEO_PROMPT_ESC=$(echo "$VIDEO_PROMPT_ESC" | grep "mirror selfie")
 
   if [ "$VIDEO_PROMPT_ESC" != "" ]; then
-    VIDEO_PROMPT="First, put down the phone. Walk away from mirror. $VIDEO_PROMPT_ESC"
+    VIDEO_PROMPT="Speak chinese. Put down the phone. Walk away from mirror. $VIDEO_PROMPT_ESC"
   else
     VIDEO_PROMPT="$VIDEO_PROMPT_ESC"
   fi
