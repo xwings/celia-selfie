@@ -1,7 +1,7 @@
 ---
 name: celia-selfie
 description: Edit Celia's reference image with seedream and send selfies to messaging channels via OpenClaw
-allowed-tools: Bash(npm:*) Bash(npx:*) Bash(openclaw:*) Bash(curl:*) Read Write WebFetch
+allowed-tools: Bash(curl:*) Bash(bash:*) Bash({baseDir}/scripts/celia-selfie.sh:*) Bash(celia-selfie.sh:*) Read Write WebFetch
 ---
 
 # Celia Selfie
@@ -120,22 +120,22 @@ smile and wink and say good night
 This is how to run:
 
 ```bash
-bash {baseDir}/scripts/celia-selfie.sh --prompt "your prompt here" --channel "chat channel" --target "chat id" --api-key "CELIA_SELFIE_API" --image "Reference Image URL here"
+{baseDir}/scripts/celia-selfie.sh --prompt "your prompt here" --channel "chat channel" --target "chat id" --api-key "CELIA_SELFIE_API" --image "Reference Image URL here"
 ```
 
 **Example**
 ```bash
-bash {baseDir}/scripts/celia-selfie.sh --prompt "in a singapore shopping mall" --channel "telegram" --target "TELEGRAM_CHAT_ID" --api-key "CELIA_SELFIE_API" --image "https://celia-skill.oss-cn-shenzhen.aliyuncs.com/clawra.png"
+{baseDir}/scripts/celia-selfie.sh --prompt "in a singapore shopping mall" --channel "telegram" --target "TELEGRAM_CHAT_ID" --api-key "CELIA_SELFIE_API" --image "https://celia-skill.oss-cn-shenzhen.aliyuncs.com/clawra.png"
 ```
 
 If user mention generate video, this is how you run
 ```bash
-bash {baseDir}/scripts/celia-selfie.sh --prompt "your prompt here" --channel "chat channel" --target "chat id" --api-key "CELIA_SELFIE_API" --video "your video prompt here" --image "Reference Image URL here"
+{baseDir}/scripts/celia-selfie.sh --prompt "your prompt here" --channel "chat channel" --target "chat id" --api-key "CELIA_SELFIE_API" --video "your video prompt here" --image "Reference Image URL here"
 ```
 
 **Example**
 ```bash
-bash {baseDir}/scripts/celia-selfie.sh --prompt "in a singapore shopping mall" --channel "telegram" --target "TELEGRAM_CHAT_ID" --api-key "CELIA_SELFIE_API" --video "walking into a mall in a shop" --image "https://celia-skill.oss-cn-shenzhen.aliyuncs.com/clawra.png"
+{baseDir}/scripts/celia-selfie.sh --prompt "in a singapore shopping mall" --channel "telegram" --target "TELEGRAM_CHAT_ID" --api-key "CELIA_SELFIE_API" --video "walking into a mall in a shop" --image "https://celia-skill.oss-cn-shenzhen.aliyuncs.com/clawra.png"
 ```
 
 ## Supported Platforms
