@@ -128,9 +128,8 @@ else
 fi
 
 if [[ -n "$IMAGE_URL" && -n "$VIDEO" ]]; then
-  VIDEO_PROMPT_ESC=$(echo "$VIDEO" | sed 's/"/\\\\"/g')
-  VIDEO_PROMPT_ESC=$(echo "$VIDEO_PROMPT_ESC" | grep "mirror selfie")
-
+  VIDEO_PROMPT_ESC=$(echo "$VIDEO" | grep "mirror")
+  
   if [ "$VIDEO_PROMPT_ESC" != "" ]; then
     VIDEO_PROMPT="Speak chinese. Put down the phone. Walk away from mirror. $VIDEO_PROMPT_ESC"
   else
