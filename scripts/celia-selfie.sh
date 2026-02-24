@@ -131,9 +131,9 @@ if [[ -n "$IMAGE_URL" && -n "$VIDEO" ]]; then
   VIDEO_PROMPT_ESC=$(echo "$VIDEO" | grep "mirror")
   
   if [ "$VIDEO_PROMPT_ESC" != "" ]; then
-    VIDEO_PROMPT="Speak chinese. Put down the phone. Walk away from mirror. $VIDEO_PROMPT_ESC"
+    VIDEO_PROMPT="Speak chinese. Put down the phone. Walk away from mirror. $VIDEO"
   else
-    VIDEO_PROMPT="Speak chinese. $VIDEO_PROMPT_ESC"
+    VIDEO_PROMPT="Speak chinese. $VIDEO"
   fi
   
   JSON_PAYLOAD="{\"model\": \"grok-imagine-video\", \"prompt\": \"$VIDEO_PROMPT\", \"duration\": 15, \"image\": {\"url\": \"$IMAGE_URL\"}}"
