@@ -149,12 +149,12 @@ if [[ -n "$IMAGE_URL" && -n "$VIDEO" ]]; then
 
   elif [ $VIDEO_PROVIDER == "FAL" ]; then
     JSON_PAYLOAD="{\"prompt\": \"$VIDEO_PROMPT\", \"image_url\": \"$IMAGE_URL\"}"
-    RESPONSE=$(curl -s -X POST "https://queue.fal.run/fal-ai/cosmos-predict-2.5/image-to-video" \
+    RESPONSE=$(curl -s -X POST "https://queue.fal.run/fal-ai/kling-video/o3/standard/image-to-video" \
       -H "Authorization: Key $API_KEY" \
       -H "Content-Type: application/json" \
       -d "$JSON_PAYLOAD")
     VIDEO_ID=$(echo "$RESPONSE" | grep -o '"request_id": *"[^"]*"' | sed 's/"request_id": *//; s/"//g')
-    VIDEO_ID_URL="https://queue.fal.run/fal-ai/cosmos-predict-2.5/requests/$VIDEO_ID"
+    VIDEO_ID_URL="https://queue.fal.run/fal-ai/kling-video/requests/$VIDEO_ID"
     VIDEO_ID_URL_HEADER="Authorization: Key $BACKUP_API_KEY"      
   fi
 
