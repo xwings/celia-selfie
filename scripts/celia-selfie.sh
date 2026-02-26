@@ -172,7 +172,7 @@ if [[ -n "$IMAGE_URL" && -n "$VIDEO" ]]; then
     # Adjust '.status' if the field is nested differently in the JSON
     VIDEO_STATUS=$(echo "$VIDEO_RESPONSE" | grep "\"url\"")
 
-    printf "\n\nCurrent Status: $VIDEO_STATUS"
+    printf "\n\nCurrent Status: $VIDEO_RESPONSE"
 
     if [ "$VIDEO_STATUS" != "" ]; then
       break
