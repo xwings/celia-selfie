@@ -148,14 +148,14 @@ if [[ -n "$IMAGE_URL" && -n "$VIDEO" ]]; then
     VIDEO_ID_URL_HEADER="Authorization: Bearer $BACKUP_API_KEY"
 
   elif [ $VIDEO_PROVIDER == "FAL" ]; then
-    JSON_PAYLOAD="{\"prompt\": \"$VIDEO_PROMPT\", \"image_url\": \"$IMAGE_URL\"}"
+    JSON_PAYLOAD="{\"prompt\": \"$VIDEO_PROMPT\", \"duration\": 15, \"image_url\": \"$IMAGE_URL\"}"
     RESPONSE=$(curl -s -X POST "https://queue.fal.run/fal-ai/kling-video/o3/standard/image-to-video" \
       -H "Authorization: Key $API_KEY" \
       -H "Content-Type: application/json" \
       -d "$JSON_PAYLOAD")
     VIDEO_ID=$(echo "$RESPONSE" | grep -o '"request_id": *"[^"]*"' | sed 's/"request_id": *//; s/"//g')
     VIDEO_ID_URL="https://queue.fal.run/fal-ai/kling-video/requests/$VIDEO_ID"
-    VIDEO_ID_URL_HEADER="Authorization: Key $BACKUP_API_KEY"      
+    VIDEO_ID_URL_HEADER="Authorization: Key $API_KEY"      
   fi
 
   printf "\n\nVIDEO_PROMPT: $VIDEO_PROMPT"
@@ -163,7 +163,7 @@ if [[ -n "$IMAGE_URL" && -n "$VIDEO" ]]; then
   printf "\n\nVIDEO_ID: $VIDEO_ID"
 
   i=0
-  while [ $i -le 60 ]; do
+  while [ $i -le 120 ]; do
     # Make the API call and capture the response
     VIDEO_RESPONSE=$(curl -s -X GET "$VIDEO_ID_URL" \
         -H $VIDEO_ID_URL_HEADER)
@@ -178,7 +178,7 @@ if [[ -n "$IMAGE_URL" && -n "$VIDEO" ]]; then
       break
     fi
     i=$((i+1))
-    sleep 2
+    sleep 5
   done
   VIDEO_URL=$(echo $VIDEO_RESPONSE | awk -F '"url":"' '{print $2}' | awk -F '","' '{print $1}')
   printf "\n\nVIDEO_URL: $VIDEO_URL"
