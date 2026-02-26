@@ -166,7 +166,7 @@ if [[ -n "$IMAGE_URL" && -n "$VIDEO" ]]; then
   while [ $i -le 120 ]; do
     # Make the API call and capture the response
     VIDEO_RESPONSE=$(curl -s -X GET "$VIDEO_ID_URL" \
-        -H $VIDEO_ID_URL_HEADER)
+        -H "$VIDEO_ID_URL_HEADER")
 
     # Extract the status using jq
     # Adjust '.status' if the field is nested differently in the JSON
