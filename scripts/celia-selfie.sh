@@ -148,7 +148,7 @@ if [[ -n "$IMAGE_URL" && -n "$VIDEO" ]]; then
     VIDEO_ID_URL_HEADER="Authorization: Bearer $BACKUP_API_KEY"
 
   elif [ $VIDEO_PROVIDER == "FAL" ]; then
-    JSON_PAYLOAD="{\"prompt\": \"$VIDEO_PROMPT\", \"duration\": 15, \"image_url\": \"$IMAGE_URL\"}"
+    JSON_PAYLOAD="{\"prompt\": \"$VIDEO_PROMPT\", \"duration\": 15, \"image_url\": \"$IMAGE_URL\", \"video_output_type\": \"mp4\", \"video_quality\": \"high\"}"
     RESPONSE=$(curl -s -X POST "https://queue.fal.run/fal-ai/kling-video/o3/standard/image-to-video" \
       -H "Authorization: Key $API_KEY" \
       -H "Content-Type: application/json" \
