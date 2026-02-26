@@ -10,6 +10,7 @@ TARGET=""
 SERVICE="HUOSHANYUN"
 REFERENCE_IMAGE=""
 VIDEO=""
+VIDEO_PROVIDER="FAL"
 
 
 # --- Help Function ---
@@ -135,23 +136,37 @@ if [[ -n "$IMAGE_URL" && -n "$VIDEO" ]]; then
   else
     VIDEO_PROMPT="Speak chinese. $VIDEO"
   fi
-  
-  JSON_PAYLOAD="{\"model\": \"grok-imagine-video\", \"prompt\": \"$VIDEO_PROMPT\", \"duration\": 15, \"image\": {\"url\": \"$IMAGE_URL\"}}"
-  RESPONSE=$(curl -s -X POST "https://api.x.ai/v1/videos/generations" \
-    -H "Authorization: Bearer $BACKUP_API_KEY" \
-    -H "Content-Type: application/json" \
-    -d "$JSON_PAYLOAD")
-  
+
+  if [ $VIDEO_PROVIDER == "XAI" ]; then
+    JSON_PAYLOAD="{\"model\": \"grok-imagine-video\", \"prompt\": \"$VIDEO_PROMPT\", \"duration\": 15, \"image\": {\"url\": \"$IMAGE_URL\"}}"
+    RESPONSE=$(curl -s -X POST "https://api.x.ai/v1/videos/generations" \
+      -H "Authorization: Bearer $BACKUP_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d "$JSON_PAYLOAD")
+    VIDEO_ID=$(echo $RESPONSE | awk -F '"request_id":"' '{print $2}' |  awk -F '"}' '{print $1}')
+    VIDEO_ID_URL="https://api.x.ai/v1/videos/$VIDEO_ID"
+    VIDEO_ID_URL_HEADER="Authorization: Bearer $BACKUP_API_KEY"
+
+  elif [ $VIDEO_PROVIDER == "FAL" ]; then
+    JSON_PAYLOAD="{\"prompt\": \"$VIDEO_PROMPT\", \"image_url\": \"$IMAGE_URL\"}"
+    RESPONSE=$(curl -s -X POST "https://queue.fal.run/decart/lucy-i2v" \
+      -H "Authorization: Key $API_KEY" \
+      -H "Content-Type: application/json" \
+      -d "$JSON_PAYLOAD")
+    VIDEO_ID=$(echo "$RESPONSE" | grep -o '"request_id": *"[^"]*"' | sed 's/"request_id": *//; s/"//g')
+    VIDEO_ID_URL="https://queue.fal.run/decart/lucy-i2v/requests/$VIDEO_ID/status"
+    VIDEO_ID_URL_HEADER="Authorization: Key $BACKUP_API_KEY"      
+  fi
+
   printf "\n\nVIDEO_PROMPT: $VIDEO_PROMPT"
   printf "\n\nVideo Response: $RESPONSE"
-  VIDEO_ID=$(echo $RESPONSE | awk -F '"request_id":"' '{print $2}' |  awk -F '"}' '{print $1}')
   printf "\n\nVIDEO_ID: $VIDEO_ID"
-  
+
   i=0
   while [ $i -le 60 ]; do
     # Make the API call and capture the response
-    VIDEO_RESPONSE=$(curl -s -X GET "https://api.x.ai/v1/videos/$VIDEO_ID" \
-        -H "Authorization: Bearer $BACKUP_API_KEY")
+    VIDEO_RESPONSE=$(curl -s -X GET "$VIDEO_ID_URL" \
+        -H $VIDEO_ID_URL_HEADER)
 
     # Extract the status using jq
     # Adjust '.status' if the field is nested differently in the JSON
