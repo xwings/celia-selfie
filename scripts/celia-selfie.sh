@@ -138,7 +138,7 @@ if [[ -n "$IMAGE_URL" && -n "$VIDEO" ]]; then
   fi
 
   if [ $VIDEO_PROVIDER == "XAI" ]; then
-    JSON_PAYLOAD="{\"model\": \"grok-imagine-video\", \"prompt\": \"$VIDEO_PROMPT\", \"duration\": 15, \"image\": {\"url\": \"$IMAGE_URL\"}}"
+    JSON_PAYLOAD="{\"model\": \"grok-imagine-video\", \"prompt\": \"$VIDEO_PROMPT\", \"respect_moderation\": false, \"duration\": 15, \"image\": {\"url\": \"$IMAGE_URL\"}}"
     RESPONSE=$(curl -s -X POST "https://api.x.ai/v1/videos/generations" \
       -H "Authorization: Bearer $BACKUP_API_KEY" \
       -H "Content-Type: application/json" \
