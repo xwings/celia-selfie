@@ -154,7 +154,7 @@ if [[ -n "$IMAGE_URL" && -n "$VIDEO" ]]; then
       -H "Content-Type: application/json" \
       -d "$JSON_PAYLOAD")
     VIDEO_ID=$(echo "$RESPONSE" | grep -o '"request_id": *"[^"]*"' | sed 's/"request_id": *//; s/"//g')
-    VIDEO_ID_URL="https://queue.fal.run/decart/lucy-i2v/requests/$VIDEO_ID/status"
+    VIDEO_ID_URL="https://queue.fal.run/decart/lucy-i2v/requests/$VIDEO_ID"
     VIDEO_ID_URL_HEADER="Authorization: Key $BACKUP_API_KEY"      
   fi
 
