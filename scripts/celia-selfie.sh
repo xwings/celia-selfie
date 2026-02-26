@@ -170,7 +170,7 @@ if [[ -n "$IMAGE_URL" && -n "$VIDEO" ]]; then
 
     # Extract the status using jq
     # Adjust '.status' if the field is nested differently in the JSON
-    VIDEO_STATUS=$(echo "$VIDEO_RESPONSE" | grep "url")
+    VIDEO_STATUS=$(echo "$VIDEO_RESPONSE" | grep "\"url\"")
 
     printf "\n\nCurrent Status: $VIDEO_STATUS"
 
