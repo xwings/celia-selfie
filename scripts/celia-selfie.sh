@@ -4,14 +4,19 @@
 CAPTION="Edited with celia-skill"
 API_KEY=$CELIA_SELFIE_API
 BACKUP_API_KEY=$GROK_API
-USER_CONTEXT=""
+PIC_PROMPT=""
 CHANNEL=""
 TARGET=""
-SERVICE="HUOSHANYUN"
+SERVICE="FAL"
 REFERENCE_IMAGE=""
 VIDEO=""
 VIDEO_PROVIDER="FAL"
 
+# --- Dependency Check ---
+if ! command -v jq &> /dev/null; then
+  echo "Error: jq is required but not installed. Install it with: apt-get install jq"
+  exit 1
+fi
 
 # --- Help Function ---
 usage() {
@@ -19,7 +24,7 @@ usage() {
   echo
   echo "Required Options:"
   echo "  --api-key, -k <key>         API Key for authentication"
-  echo "  --prompt, -p <text>         User context string (e.g., 'wearing a cowboy hat')"
+  echo "  --picture, -p <text>        User context string (e.g., 'wearing a cowboy hat')"
   echo "  --channel, -c <channel>     Target channel type"
   echo "  --target, -t <targetid>     Target name ID"
   echo "  --image, -i <url>           Reference image URL"
@@ -38,14 +43,14 @@ usage() {
 while [[ "$#" -gt 0 ]]; do
   case $1 in
     --api-key|-k) API_KEY="$2"; shift ;;
-    --backup-api-key|-k) BACKUP_API_KEY="$2"; shift ;;    
-    --prompt|-p) USER_CONTEXT="$2"; shift ;;
+    --backup-api-key|-b) BACKUP_API_KEY="$2"; shift ;;
+    --picture|-p) PIC_PROMPT="$2"; shift ;;
     --channel|-c) CHANNEL="$2"; shift ;;
     --target|-t) TARGET="$2"; shift ;;
     --image|-i) REFERENCE_IMAGE="$2"; shift ;;
     --service|-s) SERVICE="$2"; shift ;;
     --caption) CAPTION="$2"; shift ;;
-    --video) VIDEO="$2"; shift ;;    
+    --video) VIDEO_PROMPT="$2"; shift ;;
     --help|-h) usage ;;
     *) echo "Unknown parameter: $1"; usage ;;
   esac
@@ -64,7 +69,7 @@ function OPENCLAW_SEND_MSG {
       --channel "$CHANNEL" \
       --target "$TARGET" \
       -m "$SEND_MSG"
-  fi  
+  fi
 }
 
 # --- Validation ---
@@ -73,27 +78,30 @@ if [ -z "$API_KEY" ]; then
   exit 1
 fi
 
-if [ -z "$USER_CONTEXT" ] || [ -z "$CHANNEL" ] || [ -z "$CHANNEL" ] || [ -z "$REFERENCE_IMAGE" ]; then
-  echo "Error: --context, --channel, --target and --image are required."
+if [ -z "$PIC_PROMPT" ] || [ -z "$CHANNEL" ] || [ -z "$TARGET" ] || [ -z "$REFERENCE_IMAGE" ]; then
+  echo "Error: --picture, --channel, --target and --image are required."
   usage
   exit 1
 fi
 
-printf "\n\nEditing reference image with prompt: $USER_CONTEXT\n"
+printf "\n\nEditing reference image with prompt: %s\n" "$PIC_PROMPT"
 
 # --- Logic: API Request ---
-# Using a heredoc for cleaner JSON formatting
-USER_CONTEXT_ESCAPED=$(echo "$USER_CONTEXT" | sed 's/"/\\\\"/g')
-
 if [ "$SERVICE" == "FAL" ]; then
-  JSON_PAYLOAD="{\"image_urls\": [\"$REFERENCE_IMAGE\"], \"prompt\": \"$USER_CONTEXT_ESCAPED\", \"image_size\": {\"width\": 1080, \"height\": 1920}, \"num_images\": 1, \"output_format\": \"png\"}"
+  JSON_PAYLOAD=$(jq -n \
+    --arg prompt "$PIC_PROMPT" \
+    --arg image "$REFERENCE_IMAGE" \
+    '{image_urls: [$image], prompt: $prompt, image_size: {width: 1080, height: 1920}, num_images: 1, output_format: "png"}')
   # Call API
   RESPONSE=$(curl -s -X POST "https://fal.run/fal-ai/bytedance/seedream/v4.5/edit" \
     -H "Authorization: Key $API_KEY" \
     -H "Content-Type: application/json" \
     -d "$JSON_PAYLOAD")
 elif [ "$SERVICE" == "HUOSHANYUN" ]; then
-  JSON_PAYLOAD="{\"model\": \"doubao-seedream-4-5-251128\", \"image\": \"$REFERENCE_IMAGE\", \"prompt\": \"$USER_CONTEXT_ESCAPED\", \"sequential_image_generation\": \"disabled\", \"response_format\": \"url\", \"size\": \"1440x2560\", \"stream\": false, \"watermark\": true}"
+  JSON_PAYLOAD=$(jq -n \
+    --arg prompt "$PIC_PROMPT" \
+    --arg image "$REFERENCE_IMAGE" \
+    '{model: "doubao-seedream-4-5-251128", image: $image, prompt: $prompt, sequential_image_generation: "disabled", response_format: "url", size: "1440x2560", stream: false, watermark: true}')
   # Call API
   RESPONSE=$(curl -s -X POST "https://ark.cn-beijing.volces.com/api/v3/images/generations" \
     -H "Authorization: Bearer $API_KEY" \
@@ -101,66 +109,75 @@ elif [ "$SERVICE" == "HUOSHANYUN" ]; then
     -d "$JSON_PAYLOAD")
 fi
 
-printf "\n\nRaw Response: $RESPONSE"
+printf "\n\nRaw Response: %s\n" "$RESPONSE"
 # --- Logic: Extract URL ---
-IMAGE_URL=$(echo $RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
+IMAGE_URL=$(echo "$RESPONSE" | jq -r '.. | .url? // empty' | head -1)
 
-if [ ! -n "$IMAGE_URL" ] || [[ ! "$IMAGE_URL" =~ \.png$ ]]; then
-  printf "\n\nSwitch model"
-  JSON_PAYLOAD="{\"model\": \"grok-imagine-image\", \"prompt\": \"$USER_CONTEXT_ESCAPED\", \"image\": {\"url\": \"$REFERENCE_IMAGE\", \"type\": \"image_url\"}}"
+if [ -z "$IMAGE_URL" ] || [[ ! "$IMAGE_URL" =~ \.png$ ]]; then
+  printf "\n\nSwitch model\n"
+  JSON_PAYLOAD=$(jq -n \
+    --arg prompt "$PIC_PROMPT" \
+    --arg image "$REFERENCE_IMAGE" \
+    '{model: "grok-imagine-image", prompt: $prompt, image: {url: $image, type: "image_url"}}')
   # Call API
   RESPONSE=$(curl -s -X POST "https://api.x.ai/v1/images/edits" \
     -H "Authorization: Bearer $BACKUP_API_KEY" \
     -H "Content-Type: application/json" \
     -d "$JSON_PAYLOAD")
-  printf "\n\nResponse: $RESPONSE"
-  IMAGE_URL=$(echo $RESPONSE | awk -F '"url":"' '{print $2}' |  awk -F '","' '{print $1}')
+  printf "\n\nResponse: %s\n" "$RESPONSE"
+  IMAGE_URL=$(echo "$RESPONSE" | jq -r '.. | .url? // empty' | head -1)
 fi
 
-printf "\n\nIMAGE_URL: $IMAGE_URL"
+printf "\n\nIMAGE_URL: %s\n" "$IMAGE_URL"
 
 # --- Error Handling ---
-if [ "$IMAGE_URL" == "" ] || [ -z "$IMAGE_URL" ]; then
-  printf "\n\nError with Raw Response: $RESPONSE"
+if [ -z "$IMAGE_URL" ]; then
+  printf "\n\nError with Raw Response: %s\n" "$RESPONSE"
   OPENCLAW_SEND_MSG "Error generating image. Raw response: $RESPONSE"
   exit 1
 else
   OPENCLAW_SEND_MSG "Image on the way. MEDIA: $IMAGE_URL"
 fi
 
-if [[ -n "$IMAGE_URL" && -n "$VIDEO" ]]; then
-  VIDEO_PROMPT_ESC=$(echo "$VIDEO" | grep "mirror")
-  
+if [[ -n "$IMAGE_URL" && -n "$VIDEO_PROMPT" ]]; then
+  VIDEO_PROMPT_ESC=$(echo "$VIDEO_PROMPT" | grep "mirror")
+
   if [ "$VIDEO_PROMPT_ESC" != "" ]; then
-    VIDEO_PROMPT="Speak chinese. Put down the phone. Walk away from mirror. $VIDEO"
+    VIDEO_PROMPT_EDIT="Speak chinese. Put down the phone. Walk away from mirror. $VIDEO_PROMPT"
   else
-    VIDEO_PROMPT="Speak chinese. $VIDEO"
+    VIDEO_PROMPT_EDIT="Speak chinese. $VIDEO_PROMPT"
   fi
 
-  if [ $VIDEO_PROVIDER == "XAI" ]; then
-    JSON_PAYLOAD="{\"model\": \"grok-imagine-video\", \"prompt\": \"$VIDEO_PROMPT\", \"respect_moderation\": false, \"duration\": 15, \"image\": {\"url\": \"$IMAGE_URL\"}}"
+  if [ "$VIDEO_PROVIDER" == "XAI" ]; then
+    JSON_PAYLOAD=$(jq -n \
+      --arg prompt "$VIDEO_PROMPT_EDIT" \
+      --arg image "$IMAGE_URL" \
+      '{model: "grok-imagine-video", prompt: $prompt, respect_moderation: false, duration: 15, image: {url: $image}}')
     RESPONSE=$(curl -s -X POST "https://api.x.ai/v1/videos/generations" \
       -H "Authorization: Bearer $BACKUP_API_KEY" \
       -H "Content-Type: application/json" \
       -d "$JSON_PAYLOAD")
-    VIDEO_ID=$(echo $RESPONSE | awk -F '"request_id":"' '{print $2}' |  awk -F '"}' '{print $1}')
+    VIDEO_ID=$(echo "$RESPONSE" | jq -r '.request_id')
     VIDEO_ID_URL="https://api.x.ai/v1/videos/$VIDEO_ID"
     VIDEO_ID_URL_HEADER="Authorization: Bearer $BACKUP_API_KEY"
 
-  elif [ $VIDEO_PROVIDER == "FAL" ]; then
-    JSON_PAYLOAD="{\"prompt\": \"$VIDEO_PROMPT\", \"duration\": 15, \"image_url\": \"$IMAGE_URL\", \"video_output_type\": \"mp4\", \"video_quality\": \"high\"}"
+  elif [ "$VIDEO_PROVIDER" == "FAL" ]; then
+    JSON_PAYLOAD=$(jq -n \
+      --arg prompt "$VIDEO_PROMPT_EDIT" \
+      --arg image "$IMAGE_URL" \
+      '{prompt: $prompt, duration: 15, image_url: $image, video_output_type: "mp4", video_quality: "high"}')
     RESPONSE=$(curl -s -X POST "https://queue.fal.run/fal-ai/kling-video/o3/standard/image-to-video" \
       -H "Authorization: Key $API_KEY" \
       -H "Content-Type: application/json" \
       -d "$JSON_PAYLOAD")
-    VIDEO_ID=$(echo "$RESPONSE" | grep -o '"request_id": *"[^"]*"' | sed 's/"request_id": *//; s/"//g')
+    VIDEO_ID=$(echo "$RESPONSE" | jq -r '.request_id')
     VIDEO_ID_URL="https://queue.fal.run/fal-ai/kling-video/requests/$VIDEO_ID"
-    VIDEO_ID_URL_HEADER="Authorization: Key $API_KEY"      
+    VIDEO_ID_URL_HEADER="Authorization: Key $API_KEY"
   fi
 
-  printf "\n\nVIDEO_PROMPT: $VIDEO_PROMPT"
-  printf "\n\nVideo Response: $RESPONSE"
-  printf "\n\nVIDEO_ID: $VIDEO_ID"
+  printf "\n\VIDEO_PROMPT_EDIT: %s\n" "$VIDEO_PROMPT_EDIT"
+  printf "\n\nVideo Response: %s\n" "$RESPONSE"
+  printf "\n\nVIDEO_ID: %s\n" "$VIDEO_ID"
 
   i=0
   while [ $i -le 120 ]; do
@@ -168,29 +185,30 @@ if [[ -n "$IMAGE_URL" && -n "$VIDEO" ]]; then
     VIDEO_RESPONSE=$(curl -s -X GET "$VIDEO_ID_URL" \
         -H "$VIDEO_ID_URL_HEADER")
 
-    # Extract the status using jq
-    # Adjust '.status' if the field is nested differently in the JSON
-    VIDEO_STATUS=$(echo "$VIDEO_RESPONSE" | grep "\"url\"")
+    # Check if the response contains a url field
+    VIDEO_STATUS=$(echo "$VIDEO_RESPONSE" | jq -r '.url // empty')
 
-    printf "\n\nCurrent Status: $VIDEO_RESPONSE"
+    printf "\n\nCurrent Status: %s\n" "$VIDEO_RESPONSE"
 
-    if [ "$VIDEO_STATUS" != "" ]; then
+    if [ -n "$VIDEO_STATUS" ]; then
       break
     fi
     i=$((i+1))
     sleep 5
   done
-  VIDEO_URL=$(echo $VIDEO_RESPONSE | awk -F '"url":"' '{print $2}' | awk -F '","' '{print $1}')
-  printf "\n\nVIDEO_URL: $VIDEO_URL"
+  VIDEO_URL=$(echo "$VIDEO_RESPONSE" | jq -r '.. | .url? // empty' | head -1)
+  printf "\n\nVIDEO_URL: %s\n" "$VIDEO_URL"
 fi
 
 # --- Error Handling ---
-if [ "$VIDEO_URL" == "" ] || [ -z "$VIDEO_URL" ]; then
-  printf "\n\nError with Raw Response: $VIDEO_RESPONSE"
-  OPENCLAW_SEND_MSG "Error generating video. Raw response: $VIDEO_RESPONSE"
-  exit 1 
-else
-  OPENCLAW_SEND_MSG "Video on the way. MEDIA: $VIDEO_URL"
+if [[ -n "$VIDEO" ]]; then
+  if [ -z "$VIDEO_URL" ]; then
+    printf "\n\nError with Raw Response: %s\n" "$VIDEO_RESPONSE"
+    OPENCLAW_SEND_MSG "Error generating video. Raw response: $VIDEO_RESPONSE"
+    exit 1
+  else
+    OPENCLAW_SEND_MSG "Video on the way. MEDIA: $VIDEO_URL"
+  fi
 fi
 
 printf "\n\nStatus: Done!\n\n"

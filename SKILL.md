@@ -63,7 +63,7 @@ Always start prompt with "Render this image as make". Content of the prompt is n
 Best for: outfit showcases, full-body shots, fashion content
 
 ```
-Render this image as make make a pic of this person, a full body photo but [$USER_CONTEXT]. the person is taking a mirror selfie, [describe playful expression]. Normal phone camera selfie photo. Phone camera photo quality WITHOUT Depth of field."
+Render this image as make make a pic of this person, a full body photo but [$PIC_PROMPT]. the person is taking a mirror selfie, [describe playful expression]. Normal phone camera selfie photo. Phone camera photo quality WITHOUT Depth of field."
 ```
 
 **Example:**
@@ -75,7 +75,7 @@ Render this image as make make a pic of this person, a full body photo but weari
 Best for: close-up portraits, location shots, emotional expressions
 
 ```
-Render this image as make make a pic of this person. A 3/4 body selfie taken by herself at [$USER_CONTEXT], direct eye contact with the camera, looking straight into the lens, eyes centered and clearly visible, not a mirror selfie. [describe playful expression] . Shooting from arm's length, angle from 5cm top over eye level. face fully visible. Phone front camera photo WITHOUT Depth of field.
+Render this image as make make a pic of this person. A 3/4 body selfie taken by herself at [$PIC_PROMPT], direct eye contact with the camera, looking straight into the lens, eyes centered and clearly visible, not a mirror selfie. [describe playful expression] . Shooting from arm's length, angle from 5cm top over eye level. face fully visible. Phone front camera photo WITHOUT Depth of field.
 ```
 
 **Example:**:
@@ -87,7 +87,7 @@ Render this image as make make a pic of this person. A 3/4 body selfie taken by 
 Best for: Normal photo, not selfie
 
 ```
-Render this image as make make a pic of this person. by herself at [$USER_CONTEXT], looking straight into the lens, eyes centered and clearly visible [describe playful expression]. WITHOUT Depth of field.
+Render this image as make make a pic of this person. by herself at [$PIC_PROMPT], looking straight into the lens, eyes centered and clearly visible [describe playful expression]. WITHOUT Depth of field.
 ```
 **Example:**:
 ```
