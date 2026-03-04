@@ -120,22 +120,22 @@ smile and wink and say good night
 This is how to run:
 
 ```bash
-{baseDir}/scripts/celia-selfie.sh --prompt "your prompt here" --channel "chat channel" --target "chat id" --api-key "CELIA_SELFIE_API" --image "Reference Image URL here"
+{baseDir}/scripts/celia-selfie.sh --picture "your prompt here" --channel "chat channel" --target "chat id" --api-key "CELIA_SELFIE_API" --image "Reference Image URL here"
 ```
 
 **Example**
 ```bash
-{baseDir}/scripts/celia-selfie.sh --prompt "in a singapore shopping mall" --channel "telegram" --target "TELEGRAM_CHAT_ID" --api-key "CELIA_SELFIE_API" --image "https://celia-skill.oss-cn-shenzhen.aliyuncs.com/clawra.png"
+{baseDir}/scripts/celia-selfie.sh --picture "in a singapore shopping mall" --channel "telegram" --target "TELEGRAM_CHAT_ID" --api-key "CELIA_SELFIE_API" --image "https://celia-skill.oss-cn-shenzhen.aliyuncs.com/clawra.png"
 ```
 
 If user mention generate video, this is how you run
 ```bash
-{baseDir}/scripts/celia-selfie.sh --prompt "your prompt here" --channel "chat channel" --target "chat id" --api-key "CELIA_SELFIE_API" --video "your video prompt here" --image "Reference Image URL here"
+{baseDir}/scripts/celia-selfie.sh --picture "your prompt here" --channel "chat channel" --target "chat id" --api-key "CELIA_SELFIE_API" --video "your video prompt here" --image "Reference Image URL here"
 ```
 
 **Example**
 ```bash
-{baseDir}/scripts/celia-selfie.sh --prompt "in a singapore shopping mall" --channel "telegram" --target "TELEGRAM_CHAT_ID" --api-key "CELIA_SELFIE_API" --video "walking into a mall in a shop" --image "https://celia-skill.oss-cn-shenzhen.aliyuncs.com/clawra.png"
+{baseDir}/scripts/celia-selfie.sh --picture "in a singapore shopping mall" --channel "telegram" --target "TELEGRAM_CHAT_ID" --api-key "CELIA_SELFIE_API" --video "walking into a mall in a shop" --image "https://celia-skill.oss-cn-shenzhen.aliyuncs.com/clawra.png"
 ```
 
 ## Supported Platforms
