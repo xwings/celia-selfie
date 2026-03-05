@@ -144,11 +144,13 @@ printf "\n\nVIDEO_PROMPT: %s\n" "$VIDEO_PROMPT"
 if [[ -n "$IMAGE_URL" && -n "$VIDEO_PROMPT" ]]; then
   VIDEO_PROMPT_ESC=$(echo "$PIC_PROMPT" | grep "mirror")
 
-  if [ ! -z $VIDEO_PROMPT_ESC ]; then
+  if [ ! -z "$VIDEO_PROMPT_ESC" ]; then
     VIDEO_PROMPT_EDIT="Speak chinese. Put down the phone. Walk away from mirror. $VIDEO_PROMPT"
   else
     VIDEO_PROMPT_EDIT="Speak chinese. $VIDEO_PROMPT"
   fi
+
+  printf "\n\nVIDEO_PROMPT_EDIT: %s\n" "$VIDEO_PROMPT_EDIT"
 
   if [ "$VIDEO_PROVIDER" == "XAI" ]; then
     JSON_PAYLOAD=$(jq -n \
@@ -177,7 +179,7 @@ if [[ -n "$IMAGE_URL" && -n "$VIDEO_PROMPT" ]]; then
     VIDEO_ID_URL_HEADER="Authorization: Key $API_KEY"
   fi
 
-  printf "\n\nVIDEO_PROMPT_EDIT: %s\n" "$VIDEO_PROMPT_EDIT"
+
   printf "\n\nVideo Response: %s\n" "$RESPONSE"
   printf "\n\nVIDEO_ID: %s\n" "$VIDEO_ID"
 
