@@ -156,7 +156,7 @@ if [[ -n "$IMAGE_URL" && -n "$VIDEO_PROMPT" ]]; then
     JSON_PAYLOAD=$(jq -n \
       --arg prompt "$VIDEO_PROMPT_EDIT" \
       --arg image "$IMAGE_URL" \
-      '{model: "grok-imagine-video", prompt: $prompt, respect_moderation: false, duration: 15, image_url: $image}')
+      '{model: "grok-imagine-video", prompt: $prompt, respect_moderation: false, duration: 15, image: {url: $image}}')
     RESPONSE=$(curl -s -X POST "https://api.x.ai/v1/videos/generations" \
       -H "Authorization: Bearer $BACKUP_API_KEY" \
       -H "Content-Type: application/json" \
@@ -169,7 +169,7 @@ if [[ -n "$IMAGE_URL" && -n "$VIDEO_PROMPT" ]]; then
     JSON_PAYLOAD=$(jq -n \
       --arg prompt "$VIDEO_PROMPT_EDIT" \
       --arg image "$IMAGE_URL" \
-      '{prompt: $prompt, duration: 15, image: {url: $image}, video_output_type: "mp4", video_quality: "high"}')
+      '{prompt: $prompt, duration: 15, image_url: $image， , video_output_type: "mp4", video_quality: "high"}')
     RESPONSE=$(curl -s -X POST "https://queue.fal.run/fal-ai/kling-video/o3/standard/image-to-video" \
       -H "Authorization: Key $API_KEY" \
       -H "Content-Type: application/json" \
