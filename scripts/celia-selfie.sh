@@ -156,7 +156,7 @@ if [[ -n "$IMAGE_URL" && -n "$VIDEO_PROMPT" ]]; then
     JSON_PAYLOAD=$(jq -n \
       --arg prompt "$VIDEO_PROMPT_EDIT" \
       --arg image "$IMAGE_URL" \
-      '{model: "grok-imagine-video", prompt: $prompt, image_url: $image, duration: 15}')
+      '{model: "grok-imagine-video", prompt: $prompt, duration: 15, image: {url: $image}}')
     RESPONSE=$(curl -s -X POST "https://api.x.ai/v1/videos/generations" \
       -H "Authorization: Bearer $BACKUP_API_KEY" \
       -H "Content-Type: application/json" \
