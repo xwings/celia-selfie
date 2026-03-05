@@ -156,7 +156,7 @@ if [[ -n "$IMAGE_URL" && -n "$VIDEO_PROMPT" ]]; then
     JSON_PAYLOAD=$(jq -n \
       --arg prompt "$VIDEO_PROMPT_EDIT" \
       --arg image "$IMAGE_URL" \
-      '{model: "grok-imagine-video", prompt: $prompt, respect_moderation: false, duration: 15, image: {url: $image}}')
+      '{model: "grok-imagine-video", prompt: $prompt, image_url: $image, duration: 15}')
     RESPONSE=$(curl -s -X POST "https://api.x.ai/v1/videos/generations" \
       -H "Authorization: Bearer $BACKUP_API_KEY" \
       -H "Content-Type: application/json" \
@@ -190,22 +190,20 @@ if [[ -n "$IMAGE_URL" && -n "$VIDEO_PROMPT" ]]; then
         -H "$VIDEO_ID_URL_HEADER")
 
     # Check if the response contains a url field
-    VIDEO_STATUS=$(echo "$VIDEO_RESPONSE" | jq -r '.url // empty')
-
+    VIDEO_URL=$(echo "$VIDEO_RESPONSE" | jq -r '.. | .url? // empty' | head -1)
     printf "\n\nCurrent Status: %s\n" "$VIDEO_RESPONSE"
 
-    if [ -n "$VIDEO_STATUS" ]; then
+    if [ -n "$VIDEO_URL" ]; then
       break
     fi
     i=$((i+1))
     sleep 5
   done
-  VIDEO_URL=$(echo "$VIDEO_RESPONSE" | jq -r '.. | .url? // empty' | head -1)
   printf "\n\nVIDEO_URL: %s\n" "$VIDEO_URL"
 fi
 
 # --- Error Handling ---
-if [[ -n "$VIDEO" ]]; then
+if [[ -n "$VIDEO_PROMPT" ]]; then
   if [ -z "$VIDEO_URL" ]; then
     printf "\n\nError with Raw Response: %s\n" "$VIDEO_RESPONSE"
     OPENCLAW_SEND_MSG "Error generating video. Raw response: $VIDEO_RESPONSE"
