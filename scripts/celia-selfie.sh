@@ -144,7 +144,7 @@ printf "\n\nVIDEO_PROMPT: %s\n" "$VIDEO_PROMPT"
 if [[ -n "$IMAGE_URL" && -n "$VIDEO_PROMPT" ]]; then
   VIDEO_PROMPT_ESC=$(echo "$PIC_PROMPT" | grep "mirror")
 
-  if [ "$VIDEO_PROMPT_ESC" != "" ]; then
+  if [ ! -z "$VIDEO_PROMPT_ESC" ]; then
     VIDEO_PROMPT_EDIT="Speak chinese. Put down the phone. Walk away from mirror. $VIDEO_PROMPT"
   else
     VIDEO_PROMPT_EDIT="Speak chinese. $VIDEO_PROMPT"
