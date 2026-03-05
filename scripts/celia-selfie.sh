@@ -139,6 +139,8 @@ else
   OPENCLAW_SEND_MSG "Image on the way. MEDIA: $IMAGE_URL"
 fi
 
+printf "\n\nVIDEO_PROMPT: %s\n" "$VIDEO_PROMPT"
+
 if [[ -n "$IMAGE_URL" && -n "$VIDEO_PROMPT" ]]; then
   VIDEO_PROMPT_ESC=$(echo "$VIDEO_PROMPT" | grep "mirror")
 
