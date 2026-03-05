@@ -97,20 +97,20 @@ Render this image as make make a pic of this person. by herself at living room, 
 ### Step 3: Generate Video Prompt if required (If user mention generate video, this is your prompt)
 
 **Video prompt** 
-Video promt will be based on following action right after the image action or location. Keep it short, just like the example.
+Video promt will be based on following action right after the image action or location. It's a 15 seconds long video.
 
 **Example:**:
-Image prompt says the person is in a living room. Video prompt should be something around
+Image prompt says the person is in a living room. Example video prompt
 ```
 the person walk towards the couch and sit down.
 
 ```
-Image prompt says the person is in a shoppping mall. Video prompt should be something around
+Image prompt says the person is in a shoppping mall. Example video prompt
 ```
 the person walk around for window shopping
 ```
 
-Image prompt says the person is in a bed room. Video prompt should be something around
+Image prompt says the person is in a bed room. Example video prompt
 ```
 smile and wink and say good night
 ```
